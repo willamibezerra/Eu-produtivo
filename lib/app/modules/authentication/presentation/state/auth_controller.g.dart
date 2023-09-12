@@ -8,41 +8,41 @@ part of 'auth_controller.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-mixin _$AuthController on _AuthControllerBase, Store {
-  late final _$singInSucessAtom =
-      Atom(name: '_AuthControllerBase.singInSucess', context: context);
+mixin _$AuthController on AuthControllerBase, Store {
+  late final _$signInSucessAtom =
+      Atom(name: 'AuthControllerBase.signInSucess', context: context);
 
   @override
-  bool get singInSucess {
-    _$singInSucessAtom.reportRead();
-    return super.singInSucess;
+  bool? get signInSucess {
+    _$signInSucessAtom.reportRead();
+    return super.signInSucess;
   }
 
   @override
-  set singInSucess(bool value) {
-    _$singInSucessAtom.reportWrite(value, super.singInSucess, () {
-      super.singInSucess = value;
+  set signInSucess(bool? value) {
+    _$signInSucessAtom.reportWrite(value, super.signInSucess, () {
+      super.signInSucess = value;
     });
   }
 
-  late final _$repositoryAtom =
-      Atom(name: '_AuthControllerBase.repository', context: context);
+  late final _$createAccountSucessAtom =
+      Atom(name: 'AuthControllerBase.createAccountSucess', context: context);
 
   @override
-  IauthRepository? get repository {
-    _$repositoryAtom.reportRead();
-    return super.repository;
+  bool? get createAccountSucess {
+    _$createAccountSucessAtom.reportRead();
+    return super.createAccountSucess;
   }
 
   @override
-  set repository(IauthRepository? value) {
-    _$repositoryAtom.reportWrite(value, super.repository, () {
-      super.repository = value;
+  set createAccountSucess(bool? value) {
+    _$createAccountSucessAtom.reportWrite(value, super.createAccountSucess, () {
+      super.createAccountSucess = value;
     });
   }
 
   late final _$signInWithEmailAndPasswordAsyncAction = AsyncAction(
-      '_AuthControllerBase.signInWithEmailAndPassword',
+      'AuthControllerBase.signInWithEmailAndPassword',
       context: context);
 
   @override
@@ -55,8 +55,8 @@ mixin _$AuthController on _AuthControllerBase, Store {
   @override
   String toString() {
     return '''
-singInSucess: ${singInSucess},
-repository: ${repository}
+signInSucess: ${signInSucess},
+createAccountSucess: ${createAccountSucess}
     ''';
   }
 }

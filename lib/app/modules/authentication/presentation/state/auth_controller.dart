@@ -1,19 +1,33 @@
 import 'package:image_convert/app/modules/authentication/domain/repositories/interfaces/auth_repository_interface.dart';
 import 'package:mobx/mobx.dart';
+
 part 'auth_controller.g.dart';
 
-class AuthController = _AuthControllerBase with _$AuthController;
+class AuthController = AuthControllerBase with _$AuthController;
 
-abstract class _AuthControllerBase with Store {
+abstract class AuthControllerBase with Store {
+  final IauthRepository repository;
   @observable
-  bool singInSucess = false;
+  bool? signInSucess;
   @observable
-  IauthRepository? repository;
+  bool? createAccountSucess;
+  AuthControllerBase(
+    this.repository,
+  );
+
   @action
   Future<void> signInWithEmailAndPassword(
       {required String email, required String password}) async {
-    final result = await repository!
-        .signInWithEmailAndpasswordRepository(email: email, password: password);
-    result.fold((l) => singInSucess = false, (r) => singInSucess = false);
+    final result = await repository.signInWithEmailAndpasswordRepository(
+        email: email, password: password);
+    result.fold((l) => signInSucess = false, (r) => signInSucess = true);
+  }
+
+  Future<void> createAccount(
+      {required String email, required String password}) async {
+    final result = await repository.createUserWithEmailAndPasswordRepository(
+        email: email, password: password);
+    result.fold(
+        (l) => createAccountSucess = false, (r) => createAccountSucess = true);
   }
 }

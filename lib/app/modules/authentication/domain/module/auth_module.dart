@@ -6,15 +6,15 @@ import 'package:image_convert/app/modules/authentication/domain/repositories/aut
 import 'package:image_convert/app/modules/authentication/domain/repositories/interfaces/auth_repository_interface.dart';
 import 'package:image_convert/app/modules/authentication/presentation/state/auth_controller.dart';
 import 'package:image_convert/app/modules/authentication/presentation/view/pages/auth_page.dart';
+import 'package:image_convert/app/modules/authentication/presentation/view/pages/register_account_page.dart';
 
 class AuthModule extends Module {
   @override
-  void exportedBinds(Injector i) {
-    i.add<IauthDataSource>(AuthDataSource.new);
+  void binds(Injector i) {
     i.addSingleton(Auth.new);
+    i.add<IauthDataSource>(AuthDataSource.new);
     i.add<IauthRepository>(AuthRepository.new);
-    i.addSingleton(AuthController.new);
-    super.exportedBinds(i);
+    i.add(AuthController.new);
   }
 
   @override
@@ -22,6 +22,10 @@ class AuthModule extends Module {
     r.child(
       '/',
       child: (context) => AuthPage(controller: Modular.get()),
+    );
+    r.child(
+      '/register',
+      child: (context) => RegisterAccountPage(controller: Modular.get()),
     );
     super.routes(r);
   }

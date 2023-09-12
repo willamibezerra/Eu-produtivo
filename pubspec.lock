@@ -90,7 +90,7 @@ packages:
     source: hosted
     version: "2.3.2"
   build_runner:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: build_runner
       sha256: "10c6bcdbf9d049a0b666702cf1cee4ddfdc38f02a19d35ae392863b47519848b"
@@ -250,7 +250,7 @@ packages:
     source: hosted
     version: "5.8.0"
   firebase_core:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_core
       sha256: c78132175edda4bc532a71e01a32964e4b4fcf53de7853a422d96dac3725f389

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:image_convert/app/modules/authentication/presentation/state/auth_controller.dart';
@@ -78,16 +79,30 @@ class _AuthPageState extends State<AuthPage> {
                   child: const Text('Entrar'),
                 ),
               ),
+              Row(
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Modular.to.pushNamed('/auth/register');
+                    },
+                    child: const Text('Criar conta'),
+                  ),
+                ],
+              ),
               const SizedBox(
                 height: 25,
               ),
               const Text('Ou continue com:'),
               Observer(
                 builder: (context) {
-                  if (widget.controller.singInSucess) {
-                    return const Text('suceso');
+                  if (widget.controller.signInSucess != null) {
+                    if (widget.controller.signInSucess!) {
+                      return const Text('suceso');
+                    } else {
+                      return const Text('Falha');
+                    }
                   } else {
-                    return const Text('Falha');
+                    return const Text('loading');
                   }
                 },
               ),

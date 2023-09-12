@@ -11,4 +11,10 @@ class AuthDataSource implements IauthDataSource {
       {required String email, required String password}) async {
     await auth.signInWithEmailAndPassword(email: email, password: password);
   }
+
+  @override
+  Future<void> createUserWithEmailAndPassword(
+      {required String email, required String password}) async {
+    await auth.createUserWithEmailAndPassword(email: email, password: password);
+  }
 }

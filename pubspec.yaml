@@ -37,11 +37,12 @@ dependencies:
   cupertino_icons: ^1.0.2
   mobx: ^2.2.0
   flutter_modular: ^6.3.2
-  build_runner: ^2.4.6
+
   google_fonts: ^5.1.0
   firebase_auth: ^4.9.0
   dartz: ^0.10.1
   flutter_mobx: ^2.0.6+5
+  firebase_core: ^2.15.1
   
 
 dev_dependencies:
