@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -75,6 +74,16 @@ class _AuthPageState extends State<AuthPage> {
                     widget.controller.signInWithEmailAndPassword(
                         email: _emailController.text,
                         password: _passwordController.text);
+                    widget.controller.listenStateSignIn(onSuccess: () {
+                      Modular.to.pushNamed('/auth/register');
+                    }, onFailure: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          backgroundColor: Colors.red,
+                          content: Text('falha ao entrar'),
+                        ),
+                      );
+                    });
                   },
                   child: const Text('Entrar'),
                 ),
@@ -93,19 +102,6 @@ class _AuthPageState extends State<AuthPage> {
                 height: 25,
               ),
               const Text('Ou continue com:'),
-              Observer(
-                builder: (context) {
-                  if (widget.controller.signInSucess != null) {
-                    if (widget.controller.signInSucess!) {
-                      return const Text('suceso');
-                    } else {
-                      return const Text('Falha');
-                    }
-                  } else {
-                    return const Text('loading');
-                  }
-                },
-              ),
               const SizedBox(
                 height: 25,
               ),

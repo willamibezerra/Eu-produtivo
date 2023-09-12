@@ -30,4 +30,17 @@ abstract class AuthControllerBase with Store {
     result.fold(
         (l) => createAccountSucess = false, (r) => createAccountSucess = true);
   }
+
+  void listenStateSignIn(
+      {required Function onSuccess, required Function onFailure}) {
+    autorun((p0) {
+      if (signInSucess != null) {
+        if (signInSucess!) {
+          onSuccess();
+        } else {
+          onFailure();
+        }
+      }
+    });
+  }
 }

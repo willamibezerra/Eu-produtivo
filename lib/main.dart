@@ -18,9 +18,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ModularApp(
-        module: AppModule(),
-        child: MaterialApp.router(
-          routerConfig: Modular.routerConfig,
-        ));
+      module: AppModule(),
+      child: MaterialApp.router(
+        routerConfig: Modular.routerConfig,
+      ),
+    );
   }
 }
