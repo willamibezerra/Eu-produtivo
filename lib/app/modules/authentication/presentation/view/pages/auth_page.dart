@@ -26,6 +26,7 @@ class _AuthPageState extends State<AuthPage> {
     super.initState();
   }
 
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,9 +53,17 @@ class _AuthPageState extends State<AuthPage> {
               const SizedBox(
                 height: 30,
               ),
-              InputWidget(
-                controller: _emailController,
-                label: 'Email',
+              Form(
+                key: _formKey,
+                child: TextFormField(
+                  validator: (p0) {
+                    if (p0!.isEmpty) {
+                      return 'informe o email';
+                    }
+                    return null;
+                  },
+                  controller: _emailController,
+                ),
               ),
               const SizedBox(
                 height: 15,
@@ -71,19 +80,21 @@ class _AuthPageState extends State<AuthPage> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    widget.controller.signInWithEmailAndPassword(
-                        email: _emailController.text,
-                        password: _passwordController.text);
-                    widget.controller.listenStateSignIn(onSuccess: () {
-                      Modular.to.pushNamed('/auth/register');
-                    }, onFailure: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          backgroundColor: Colors.red,
-                          content: Text('falha ao entrar'),
-                        ),
-                      );
-                    });
+                    if (_formKey.currentState?.validate() ?? false) {
+                      widget.controller.signInWithEmailAndPassword(
+                          email: _emailController.text,
+                          password: _passwordController.text);
+                      widget.controller.listenStateSignIn(onSuccess: () {
+                        Modular.to.pushNamed('/auth/register');
+                      }, onFailure: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            backgroundColor: Colors.red,
+                            content: Text('falha ao entrar'),
+                          ),
+                        );
+                      });
+                    }
                   },
                   child: const Text('Entrar'),
                 ),
@@ -106,11 +117,13 @@ class _AuthPageState extends State<AuthPage> {
                 height: 25,
               ),
               SizedBox(
-                  height: 150,
-                  width: 150,
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.asset('assets/images/google_icon.webp')))
+                height: 150,
+                width: 150,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.asset('assets/images/google_icon.webp'),
+                ),
+              )
             ],
           ),
         ),
