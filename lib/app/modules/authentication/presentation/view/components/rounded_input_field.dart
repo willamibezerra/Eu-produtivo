@@ -3,6 +3,8 @@ import 'package:image_convert/app/modules/authentication/presentation/view/compo
 import 'package:image_convert/app/shared/widgets/style/app_colors.dart';
 
 class RoundedInputField extends StatelessWidget {
+  final bool obscureText;
+  final VoidCallback onTapVisibleText;
   final String? Function(String?)? validator;
   final Key? textFieldKey;
   final String hintText;
@@ -19,6 +21,8 @@ class RoundedInputField extends StatelessWidget {
     required this.controller,
     required this.textFieldKey,
     required this.validator,
+    required this.onTapVisibleText,
+    required this.obscureText,
   }) : super(key: key);
 
   final Size size;
@@ -32,6 +36,7 @@ class RoundedInputField extends StatelessWidget {
         child: Form(
           key: textFieldKey,
           child: TextFormField(
+            obscureText: obscureText,
             validator: validator,
             controller: controller,
             onChanged: onChanged,
@@ -42,7 +47,8 @@ class RoundedInputField extends StatelessWidget {
                   color: AppColors.kPrimaryColor,
                 ),
                 border: InputBorder.none,
-                suffixIcon: Icon(suffixIcon)),
+                suffixIcon: GestureDetector(
+                    onTap: onTapVisibleText, child: Icon(suffixIcon))),
           ),
         ),
       ),

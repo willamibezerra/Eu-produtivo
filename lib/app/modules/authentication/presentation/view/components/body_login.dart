@@ -35,6 +35,7 @@ class _BodyLoginState extends State<BodyLogin> {
     super.initState();
   }
 
+  bool isPasswordVisible = false;
   @override
   Widget build(BuildContext context) {
     return BackgroundLogin(
@@ -56,6 +57,8 @@ class _BodyLoginState extends State<BodyLogin> {
               height: widget.size.height * 0.35,
             ),
             RoundedInputField(
+              obscureText: false,
+              onTapVisibleText: () {},
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Digite um endereço de email';
@@ -72,6 +75,12 @@ class _BodyLoginState extends State<BodyLogin> {
               onChanged: (p0) {},
             ),
             RoundedInputField(
+              obscureText: isPasswordVisible,
+              onTapVisibleText: () {
+                setState(() {
+                  isPasswordVisible = !isPasswordVisible;
+                });
+              },
               textFieldKey: _formKeyPassword,
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -84,7 +93,8 @@ class _BodyLoginState extends State<BodyLogin> {
               size: widget.size,
               hintText: 'Senha',
               onChanged: (p0) {},
-              suffixIcon: Icons.visibility,
+              suffixIcon:
+                  isPasswordVisible ? Icons.visibility_off : Icons.visibility,
             ),
             RoundedButton(
                 press: () {
