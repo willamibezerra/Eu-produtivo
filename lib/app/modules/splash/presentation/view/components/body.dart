@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:image_convert/app/modules/splash/presentation/view/components/background.dart';
@@ -33,7 +34,9 @@ class Body extends StatelessWidget {
             ),
             RoundedButton(
               size: size,
-              press: () {},
+              press: () {
+                Modular.to.pushNamed('/auth/');
+              },
               text: 'LOGIN',
             ),
             RoundedButton(
