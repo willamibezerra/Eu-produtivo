@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 
 import 'package:image_convert/app/modules/authentication/presentation/state/auth_controller.dart';
 import 'package:image_convert/app/modules/authentication/presentation/view/components/body_login.dart';

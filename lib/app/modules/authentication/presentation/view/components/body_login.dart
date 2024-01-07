@@ -124,7 +124,9 @@ class _BodyLoginState extends State<BodyLogin> {
                   style: TextStyle(color: AppColors.kPrimaryColor),
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Modular.to.pushNamed('/auth/register');
+                  },
                   child: const Text(
                     'Criar Conta',
                     style: TextStyle(
