@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "470632350171",
+    "project_id": "imageconvert-f1ff6",
+    "storage_bucket": "imageconvert-f1ff6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:470632350171:android:ce792bab43753a20e6a7fe",
+        "android_client_info": {
+          "package_name": "com.example.image_convert"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwNzQwVuXmyEkTe_Zqd1SaQBepWpzM-20"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
