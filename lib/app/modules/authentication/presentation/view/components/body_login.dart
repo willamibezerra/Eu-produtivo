@@ -103,7 +103,7 @@ class _BodyLoginState extends State<BodyLogin> {
                         email: _emailController.text,
                         password: _passwordController.text);
                     widget.controller.listenStateSignIn(onSuccess: () {
-                      Modular.to.pushNamed('/auth/register');
+                      Modular.to.pushNamed('/home/');
                     }, onFailure: () {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(

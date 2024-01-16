@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 
 class BackgroundLogin extends StatelessWidget {
   final Widget child;
-  const BackgroundLogin({
+  double? leftPadding;
+  double? rightPadding;
+
+  BackgroundLogin({
     Key? key,
     required this.child,
+    this.leftPadding,
+    this.rightPadding,
     required this.size,
   }) : super(key: key);
 
@@ -34,7 +39,10 @@ class BackgroundLogin extends StatelessWidget {
             ),
           ),
           Positioned(
-              left: size.width * 0.1, top: size.width * 0.2, child: child)
+              left: leftPadding ?? size.width * 0.1,
+              top: size.width * 0.2,
+              right: rightPadding,
+              child: child)
         ],
       ),
     );
