@@ -85,19 +85,41 @@ class _BodyRegisterAccountState extends State<BodyRegisterAccount> {
                       });
                     },
                     obscureText: isPasswordVisible),
-                RoundedButton(
-                    press: () {
-                      widget.controller.createAccount(
-                          email: _emailController.text,
-                          password: _passWordController.text);
-                      if (widget.controller.createAccountSucess != null) {
-                        if (widget.controller.createAccountSucess!) {
-                          Modular.to.pushNamed('/auth/');
-                        }
-                      }
-                    },
-                    size: widget.size,
-                    text: 'Criar conta'),
+                Observer(
+                  builder: (_) {
+                    return RoundedButton(
+                        isLoading: widget.controller.isLoading ?? false,
+                        press: () {
+                          widget.controller.createAccount(
+                              email: _emailController.text,
+                              password: _passWordController.text);
+                          if (widget.controller.createAccountSucess != null) {
+                            if (widget.controller.createAccountSucess!) {
+                              Modular.to.pushNamed('/auth/');
+                                   ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  backgroundColor: Colors.red,
+                                  content: Text(
+                                      widget.controller.failureCreateUser ??
+                                          ''),
+                                ),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  backgroundColor: Colors.red,
+                                  content: Text(
+                                      widget.controller.failureCreateUser ??
+                                          ''),
+                                ),
+                              );
+                            }
+                          }
+                        },
+                        size: widget.size,
+                        text: 'Criar conta');
+                  },
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

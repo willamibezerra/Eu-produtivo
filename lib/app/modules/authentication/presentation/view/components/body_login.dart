@@ -97,6 +97,7 @@ class _BodyLoginState extends State<BodyLogin> {
                   isPasswordVisible ? Icons.visibility_off : Icons.visibility,
             ),
             RoundedButton(
+                isLoading: widget.controller.isLoading ?? false,
                 press: () {
                   if (_formKeyEmail.currentState?.validate() ?? false) {
                     widget.controller.signInWithEmailAndPassword(

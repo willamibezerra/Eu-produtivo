@@ -36,8 +36,9 @@ class BodyHomeWidget extends StatelessWidget {
             child: Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                    color: const Color.fromARGB(173, 0, 0, 0),
-                    borderRadius: BorderRadius.circular(12)),
+                  color: const Color.fromARGB(173, 0, 0, 0),
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 height: 150,
                 width: size.width,
                 child: selectImageButton),

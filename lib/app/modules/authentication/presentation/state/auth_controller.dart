@@ -11,6 +11,10 @@ abstract class AuthControllerBase with Store {
   bool? signInSucess;
   @observable
   bool? createAccountSucess;
+  @observable
+  bool? isLoading;
+  String? creatUser;
+  String? failureCreateUser;
   AuthControllerBase(
     this.repository,
   );
@@ -20,15 +24,23 @@ abstract class AuthControllerBase with Store {
       {required String email, required String password}) async {
     final result = await repository.signInWithEmailAndpasswordRepository(
         email: email, password: password);
+
     result.fold((l) => signInSucess = false, (r) => signInSucess = true);
   }
 
   Future<void> createAccount(
       {required String email, required String password}) async {
+    isLoading = true;
     final result = await repository.createUserWithEmailAndPasswordRepository(
         email: email, password: password);
-    result.fold(
-        (l) => createAccountSucess = false, (r) => createAccountSucess = true);
+    result.fold((l) {
+      createAccountSucess = false;
+      failureCreateUser = l;
+    }, (r) {
+      creatUser = r;
+      createAccountSucess = true;
+    });
+    isLoading = false;
   }
 
   void listenStateSignIn(

@@ -41,6 +41,22 @@ mixin _$AuthController on AuthControllerBase, Store {
     });
   }
 
+  late final _$isLoadingAtom =
+      Atom(name: 'AuthControllerBase.isLoading', context: context);
+
+  @override
+  bool? get isLoading {
+    _$isLoadingAtom.reportRead();
+    return super.isLoading;
+  }
+
+  @override
+  set isLoading(bool? value) {
+    _$isLoadingAtom.reportWrite(value, super.isLoading, () {
+      super.isLoading = value;
+    });
+  }
+
   late final _$signInWithEmailAndPasswordAsyncAction = AsyncAction(
       'AuthControllerBase.signInWithEmailAndPassword',
       context: context);
@@ -56,7 +72,8 @@ mixin _$AuthController on AuthControllerBase, Store {
   String toString() {
     return '''
 signInSucess: ${signInSucess},
-createAccountSucess: ${createAccountSucess}
+createAccountSucess: ${createAccountSucess},
+isLoading: ${isLoading}
     ''';
   }
 }
