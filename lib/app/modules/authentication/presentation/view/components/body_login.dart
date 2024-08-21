@@ -97,13 +97,14 @@ class _BodyLoginState extends State<BodyLogin> {
                   isPasswordVisible ? Icons.visibility_off : Icons.visibility,
             ),
             RoundedButton(
+                isLoading: widget.controller.isLoading ?? false,
                 press: () {
                   if (_formKeyEmail.currentState?.validate() ?? false) {
                     widget.controller.signInWithEmailAndPassword(
                         email: _emailController.text,
                         password: _passwordController.text);
                     widget.controller.listenStateSignIn(onSuccess: () {
-                      Modular.to.pushNamed('/auth/register');
+                      Modular.to.pushNamed('/home/');
                     }, onFailure: () {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
