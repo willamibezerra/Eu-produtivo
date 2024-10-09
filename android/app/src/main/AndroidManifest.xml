@@ -5,6 +5,13 @@
         android:label="image_convert"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <provider
+            android:name="com.superlist.super_native_extensions.DataProvider"
+            android:authorities="com.example.image_convert.SuperClipboardDataProvider"
+            android:exported="true"
+            android:grantUriPermissions="true" >
+        </provider>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
