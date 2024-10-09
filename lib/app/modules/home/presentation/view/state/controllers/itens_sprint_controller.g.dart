@@ -13,13 +13,13 @@ mixin _$ItensSprintController on ItensSprintControllerBase, Store {
       name: 'ItensSprintControllerBase.resultInProgress', context: context);
 
   @override
-  List<Widget>? get resultInProgress {
+  List<String>? get resultInProgress {
     _$resultInProgressAtom.reportRead();
     return super.resultInProgress;
   }
 
   @override
-  set resultInProgress(List<Widget>? value) {
+  set resultInProgress(List<String>? value) {
     _$resultInProgressAtom.reportWrite(value, super.resultInProgress, () {
       super.resultInProgress = value;
     });
@@ -29,13 +29,13 @@ mixin _$ItensSprintController on ItensSprintControllerBase, Store {
       Atom(name: 'ItensSprintControllerBase.resultInitial', context: context);
 
   @override
-  List<Widget>? get resultInitial {
+  List<String>? get resultInitial {
     _$resultInitialAtom.reportRead();
     return super.resultInitial;
   }
 
   @override
-  set resultInitial(List<Widget>? value) {
+  set resultInitial(List<String>? value) {
     _$resultInitialAtom.reportWrite(value, super.resultInitial, () {
       super.resultInitial = value;
     });
@@ -45,13 +45,13 @@ mixin _$ItensSprintController on ItensSprintControllerBase, Store {
       Atom(name: 'ItensSprintControllerBase.conclued', context: context);
 
   @override
-  List<Widget>? get conclued {
+  List<String>? get conclued {
     _$concluedAtom.reportRead();
     return super.conclued;
   }
 
   @override
-  set conclued(List<Widget>? value) {
+  set conclued(List<String>? value) {
     _$concluedAtom.reportWrite(value, super.conclued, () {
       super.conclued = value;
     });

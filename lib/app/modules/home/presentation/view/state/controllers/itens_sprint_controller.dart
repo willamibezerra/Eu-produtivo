@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 part 'itens_sprint_controller.g.dart';
 
@@ -7,22 +6,22 @@ class ItensSprintController = ItensSprintControllerBase
 
 abstract class ItensSprintControllerBase with Store {
   @observable
-  List<Widget>? resultInProgress;
+  List<String>? resultInProgress;
   @observable
-  List<Widget>? resultInitial;
+  List<String>? resultInitial;
   @observable
-  List<Widget>? conclued;
+  List<String>? conclued;
 
-  void loadSprint(List<Widget> itens) {
+  void loadSprint(List<String> itens) {
     resultInProgress = itens;
     resultInitial = [];
   }
 
-  void addOneItem(List<Widget> item) {
+  void addOneItem(List<String> item) {
     resultInitial = item;
   }
 
-  void changeToConclued(List<Widget> itens) {
+  void changeToConclued(List<String> itens) {
     conclued = itens;
     resultInProgress = [];
   }

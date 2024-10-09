@@ -12,7 +12,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool autoplay = false;
   bool startDrag = false;
   final ItensSprintController controller = ItensSprintController();
   final CarouselSliderController _carouselController =
@@ -21,32 +20,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    List<Widget> progressLisrt = [];
-    List<Widget> todoList = [
-      Draggable(
-        onDragStarted: () {
-          setState(() {
-            startDrag = true;
-            autoplay = false;
-          });
-        },
-        onDragEnd: (details) {
-          if (details.offset.dx > screenWidth * 0.8) {
-            progressLisrt.add(cardWidget(startDrag));
-            controller.loadSprint(progressLisrt);
-
-            _carouselController.nextPage();
-          }
-          setState(() {
-            startDrag = false;
-          });
-        },
-        data: 'Flutter',
-        feedback: cardWidget(startDrag),
-        childWhenDragging: Container(),
-        child: cardWidget(startDrag),
-      ),
-    ];
+    List<String> endList = [];
+    List<String> progressLisrt = [];
+    List<String> todoList = ['wwefe'];
     return Scaffold(
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
@@ -63,7 +39,6 @@ class _HomePageState extends State<HomePage> {
               child: IconButton(
                 onPressed: () {
                   setState(() {
-                    autoplay = !autoplay;
                     controller.addOneItem(todoList);
                   });
                 },
@@ -98,7 +73,6 @@ class _HomePageState extends State<HomePage> {
                     child: CarouselSlider(
                       carouselController: _carouselController,
                       options: CarouselOptions(
-                        autoPlay: autoplay,
                         autoPlayAnimationDuration:
                             const Duration(microseconds: 100),
                         height: MediaQuery.of(context).size.height * 0.8,
@@ -108,6 +82,18 @@ class _HomePageState extends State<HomePage> {
                         Builder(
                           builder: (BuildContext context) {
                             return SprintCardWidget(
+                                onDragEnd: (details, index) {
+                                  if (details.offset.dx > screenWidth * 0.8) {
+                                    progressLisrt
+                                        .add(controller.resultInitial![index]);
+                                    controller.loadSprint(progressLisrt);
+
+                                    _carouselController.nextPage();
+                                  }
+                                  setState(() {
+                                    startDrag = false;
+                                  });
+                                },
                                 title: 'Para fazer',
                                 content: controller.resultInitial);
                           },
@@ -115,6 +101,23 @@ class _HomePageState extends State<HomePage> {
                         Builder(
                           builder: (BuildContext context) {
                             return SprintCardWidget(
+                              onDragEnd: (details, index) {
+                                if (details.offset.dx > screenWidth * 0.8) {
+                                  endList
+                                      .add(controller.resultInProgress![index]);
+                                  controller.changeToConclued(endList);
+
+                                  _carouselController.nextPage();
+                                } else if (details.offset.dx <
+                                    screenWidth * 0.10) {
+                                  todoList
+                                      .add(controller.resultInProgress![index]);
+                                  controller.addOneItem(todoList);
+                                }
+                                setState(() {
+                                  startDrag = false;
+                                });
+                              },
                               title: 'Em progresso',
                               content: controller.resultInProgress,
                             );
@@ -123,6 +126,7 @@ class _HomePageState extends State<HomePage> {
                         Builder(
                           builder: (BuildContext context) {
                             return SprintCardWidget(
+                              onDragEnd: (details, index) {},
                               title: 'Feito',
                               content: controller.conclued,
                             );
