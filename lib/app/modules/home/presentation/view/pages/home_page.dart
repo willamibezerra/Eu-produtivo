@@ -19,125 +19,170 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final taskController = TextEditingController();
     double screenWidth = MediaQuery.of(context).size.width;
-    List<String> endList = [];
-    List<String> progressLisrt = [];
-    List<String> todoList = ['wwefe'];
+
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(
+          Icons.add,
+          size: 50,
+          color: Colors.blue,
+          shadows: [
+            Shadow(
+              offset: Offset(2, 2),
+              blurRadius: 4,
+              color: Colors.white,
+            ),
+          ],
+        ),
+        onPressed: () {
+          setState(() {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Expanded(
+                    child: SizedBox(
+                      height: 200,
+                      width: 200,
+                      child: Column(
+                        children: [
+                          const Text(
+                            'Adicionar tarefa',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          TextField(
+                            controller: taskController,
+                          ),
+                          const SizedBox(
+                            height: 50,
+                          ),
+                          ElevatedButton(
+                              onPressed: () {
+                                controller.toDoItem(taskController.text, null);
+                                setState(() {
+                                  Navigator.pop(context);
+                                });
+                              },
+                              child: const Text('Salvar'))
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          });
+        },
+      ),
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
-          backgroundColor: AppColors.kPrimaryColor,
-          title: const Center(
-            child: Text(
-              'Sprint',
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
+        iconTheme: const IconThemeData(color: Colors.white),
+        backgroundColor: AppColors.kPrimaryColor,
+        title: const Center(
+          child: Text(
+            'Sprint',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
-          actions: [
-            Center(
-              child: IconButton(
-                onPressed: () {
-                  setState(() {
-                    controller.addOneItem(todoList);
-                  });
-                },
-                icon: const Icon(
-                  Icons.add,
-                  size: 50,
-                  color: Colors.blue,
-                  shadows: [
-                    Shadow(
-                      offset: Offset(2, 2),
-                      blurRadius: 4,
-                      color: Colors.white,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ]),
+        ),
+      ),
+      drawer: const Drawer(),
       body: Stack(
         children: [
-          Column(
-            children: [
-              const SizedBox(
-                height: 40,
-              ),
-              Row(
-                children: [
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  Expanded(
-                    child: CarouselSlider(
-                      carouselController: _carouselController,
-                      options: CarouselOptions(
-                        autoPlayAnimationDuration:
-                            const Duration(microseconds: 100),
-                        height: MediaQuery.of(context).size.height * 0.8,
-                        enableInfiniteScroll: false,
-                      ),
-                      items: [
-                        Builder(
-                          builder: (BuildContext context) {
-                            return SprintCardWidget(
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 40,
+                ),
+                Row(
+                  children: [
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    Expanded(
+                      child: CarouselSlider(
+                        carouselController: _carouselController,
+                        options: CarouselOptions(
+                          autoPlayAnimationDuration:
+                              const Duration(microseconds: 100),
+                          height: MediaQuery.of(context).size.height * 0.8,
+                          enableInfiniteScroll: false,
+                        ),
+                        items: [
+                          Builder(
+                            builder: (BuildContext context) {
+                              return SprintCardWidget(
+                                  onDragEnd: (details, index) {
+                                    if (details.offset.dx > screenWidth * 0.6) {
+                                      controller.loadInProgress(
+                                          controller.resultInitial![index],
+                                          index,
+                                          true);
+
+                                      _carouselController.nextPage();
+                                    }
+                                    setState(() {
+                                      startDrag = false;
+                                    });
+                                  },
+                                  title: 'Para fazer',
+                                  content: controller.resultInitial);
+                            },
+                          ),
+                          Builder(
+                            builder: (BuildContext context) {
+                              return SprintCardWidget(
                                 onDragEnd: (details, index) {
-                                  if (details.offset.dx > screenWidth * 0.8) {
-                                    progressLisrt
-                                        .add(controller.resultInitial![index]);
-                                    controller.loadSprint(progressLisrt);
+                                  if (details.offset.dx > screenWidth * 0.6) {
+                                    controller.changeToConclued(
+                                        controller.resultInProgress![index],
+                                        index);
 
                                     _carouselController.nextPage();
+                                  } else if (details.offset.dx <
+                                      screenWidth * 0.16) {
+                                    controller.toDoItem(
+                                        controller.resultInProgress![index],
+                                        index);
+                                    _carouselController.previousPage();
                                   }
                                   setState(() {
                                     startDrag = false;
                                   });
                                 },
-                                title: 'Para fazer',
-                                content: controller.resultInitial);
-                          },
-                        ),
-                        Builder(
-                          builder: (BuildContext context) {
-                            return SprintCardWidget(
-                              onDragEnd: (details, index) {
-                                if (details.offset.dx > screenWidth * 0.8) {
-                                  endList
-                                      .add(controller.resultInProgress![index]);
-                                  controller.changeToConclued(endList);
-
-                                  _carouselController.nextPage();
-                                } else if (details.offset.dx <
-                                    screenWidth * 0.10) {
-                                  todoList
-                                      .add(controller.resultInProgress![index]);
-                                  controller.addOneItem(todoList);
-                                }
-                                setState(() {
-                                  startDrag = false;
-                                });
-                              },
-                              title: 'Em progresso',
-                              content: controller.resultInProgress,
-                            );
-                          },
-                        ),
-                        Builder(
-                          builder: (BuildContext context) {
-                            return SprintCardWidget(
-                              onDragEnd: (details, index) {},
-                              title: 'Feito',
-                              content: controller.conclued,
-                            );
-                          },
-                        ),
-                      ],
+                                title: 'Em progresso',
+                                content: controller.resultInProgress,
+                              );
+                            },
+                          ),
+                          Builder(
+                            builder: (BuildContext context) {
+                              return SprintCardWidget(
+                                onDragEnd: (details, index) {
+                                  if (details.offset.dx < screenWidth * 0.6) {
+                                    controller.loadInProgress(
+                                        controller.conclued![index],
+                                        index,
+                                        false);
+                                    controller.deleteconcludes(index);
+                                    _carouselController.previousPage();
+                                    setState(() {});
+                                  }
+                                },
+                                title: 'Feito',
+                                content: controller.conclued,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -145,14 +190,14 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Widget cardWidget(bool isdraged) {
+Widget cardWidget(bool isdraged, String? task) {
   return Positioned(
     child: SizedBox(
-      height: 100,
-      width: 200,
+      width: 150,
       child: Container(
-        decoration: BoxDecoration(color: Colors.yellow[200], boxShadow: [
-          if (isdraged)
+        decoration:
+            BoxDecoration(color: AppColors.kPrimaryLiggtColor, boxShadow: [
+          if (!isdraged)
             BoxShadow(
               color: Colors.grey.withOpacity(0.5),
               spreadRadius: 5,
@@ -160,6 +205,40 @@ Widget cardWidget(bool isdraged) {
               offset: const Offset(0, 3),
             ),
         ]),
+        child: task != null
+            ? Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              task,
+                              style: const TextStyle(
+                                  fontSize: 12, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          IconButton(
+                              onPressed: () {},
+                              icon: const Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                              ))
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 0,
+                      )
+                    ],
+                  ),
+                ),
+              )
+            : const SizedBox(
+                height: 50,
+              ),
       ),
     ),
   );
