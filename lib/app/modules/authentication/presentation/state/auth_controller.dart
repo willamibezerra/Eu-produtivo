@@ -20,6 +20,8 @@ abstract class AuthControllerBase with Store {
   );
 
   @action
+
+
   Future<void> signInWithEmailAndPassword(
       {required String email, required String password}) async {
     final result = await repository.signInWithEmailAndpasswordRepository(

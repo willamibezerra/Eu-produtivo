@@ -221,7 +221,7 @@ class _SprintPageState extends State<SprintPage> {
                                       false);
                                   widget.controller.deleteconcludes(index);
                                   _carouselController.previousPage();
-                                  //    setState(() {});
+                                  setState(() {});
                                 }
                               },
                               title: 'Feito',

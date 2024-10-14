@@ -15,9 +15,13 @@ abstract class ItensSprintControllerBase with Store {
   List<String>? resultInitial;
   @observable
   List<String>? conclued;
-  @observable
-  String? realTimeVaue;
-  void toDoItem(String item, int? index) {
+
+  final DatabaseReference _sprintDataBase =
+      FirebaseDatabase.instance.ref().child('to_do');
+
+  void toDoItem(String item, int? index) async {
+    DatabaseReference ref = FirebaseDatabase.instance.ref("to_do");
+
     if (resultInitial != null) {
       resultInitial!.add(item);
     } else {
@@ -26,6 +30,7 @@ abstract class ItensSprintControllerBase with Store {
     if (resultInProgress != null && index != null) {
       deleteItenInProgress(index);
     }
+    await ref.update({"itens": resultInitial});
   }
 
   void loadInProgress(String itens, int index, bool isRight) {
@@ -70,22 +75,39 @@ abstract class ItensSprintControllerBase with Store {
     }
   }
 
+  @action
   Future<void> loadTask() async {
-    try {
-      DatabaseReference _sprintDataBase =
-          FirebaseDatabase.instance.ref().child('to_do');
-      final snapshot = await _sprintDataBase.get();
-      if (snapshot.exists) {
-        Map<Object?, Object?> rawMap = snapshot.value as Map<Object?, Object?>;
+    autorun(
+      (p0) async {
+        try {
+          final snapshot = await _sprintDataBase.get();
+          if (snapshot.exists) {
+            Map<Object?, Object?> rawMap =
+                snapshot.value as Map<Object?, Object?>;
 
-        Map<String, dynamic> map = rawMap.map(
-          (key, value) => MapEntry(key.toString(), value),
-        );
-        resultInitial = List<String>.from(map["itens"]);
-      }
-    } catch (e) {
-      print(e);
-    }
+            Map<String, dynamic> map = rawMap.map(
+              (key, value) => MapEntry(key.toString(), value),
+            );
+            resultInitial = List<String>.from(map["itens"]);
+          }
+        } catch (e) {
+          print(e);
+        }
+      },
+    );
   }
-  //{to_do: {itens: [estudar, trabalhar, codar]}}
+
+  Future<void> listenGetItens(
+      {required Function onSuccess, required Function onFailure}) async {
+    autorun(
+      (p0) {
+        if (resultInitial != null) {
+          onSuccess();
+        } else {
+          onFailure();
+        }
+      },
+    );
+  }
 }
+  //{to_do: {itens: [estudar, trabalhar, codar]}}
