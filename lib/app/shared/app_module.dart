@@ -1,6 +1,6 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:image_convert/app/modules/authentication/domain/module/auth_module.dart';
-import 'package:image_convert/app/modules/home/domain/module/home_module.dart';
+import 'package:image_convert/app/modules/sprint/domain/module/sprint_module.dart';
 import 'package:image_convert/app/modules/splash/presentation/view/page/splash_screen.dart';
 
 class AppModule extends Module {

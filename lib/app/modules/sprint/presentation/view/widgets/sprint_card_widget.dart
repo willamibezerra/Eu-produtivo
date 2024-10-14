@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 
-import 'package:image_convert/app/modules/home/presentation/view/pages/home_page.dart';
+import 'package:image_convert/app/modules/sprint/presentation/view/pages/sprint_page.dart';
 
 class SprintCardWidget extends StatefulWidget {
   final void Function(DraggableDetails, int index)? onDragEnd;
   final String title;
   final List<String>? content;
+  final void Function(int index)? onTapDelete;
   const SprintCardWidget({
     Key? key,
     this.onDragEnd,
     required this.title,
     this.content,
+    required this.onTapDelete,
   }) : super(key: key);
 
   @override
@@ -64,12 +66,19 @@ class _SprintCardWidgetState extends State<SprintCardWidget> {
                       data: 'Flutter',
                       feedback: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: cardWidget(startDrag, null),
+                        child: cardWidget(
+                          startDrag,
+                          null,
+                          () {},
+                        ),
                       ),
                       childWhenDragging: Container(),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: cardWidget(startDrag, widget.content![index]),
+                        child:
+                            cardWidget(startDrag, widget.content![index], () {
+                          widget.onTapDelete!(index);
+                        }),
                       ),
                     );
                   },

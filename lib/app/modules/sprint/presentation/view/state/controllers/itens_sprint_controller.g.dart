@@ -57,12 +57,29 @@ mixin _$ItensSprintController on ItensSprintControllerBase, Store {
     });
   }
 
+  late final _$realTimeVaueAtom =
+      Atom(name: 'ItensSprintControllerBase.realTimeVaue', context: context);
+
+  @override
+  String? get realTimeVaue {
+    _$realTimeVaueAtom.reportRead();
+    return super.realTimeVaue;
+  }
+
+  @override
+  set realTimeVaue(String? value) {
+    _$realTimeVaueAtom.reportWrite(value, super.realTimeVaue, () {
+      super.realTimeVaue = value;
+    });
+  }
+
   @override
   String toString() {
     return '''
 resultInProgress: ${resultInProgress},
 resultInitial: ${resultInitial},
-conclued: ${conclued}
+conclued: ${conclued},
+realTimeVaue: ${realTimeVaue}
     ''';
   }
 }
