@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firebase_database/firebase_database.dart';
 
 import 'package:mobx/mobx.dart';
@@ -68,28 +70,22 @@ abstract class ItensSprintControllerBase with Store {
     }
   }
 
-  void loadTask() {
+  Future<void> loadTask() async {
     try {
       DatabaseReference _sprintDataBase =
-          FirebaseDatabase.instance.ref().child('tasks');
-      _sprintDataBase.onValue.listen((event) {
-        if (event.snapshot.exists) {
-          var data = event.snapshot.value;
+          FirebaseDatabase.instance.ref().child('to_do');
+      final snapshot = await _sprintDataBase.get();
+      if (snapshot.exists) {
+        Map<Object?, Object?> rawMap = snapshot.value as Map<Object?, Object?>;
 
-          if (data is Map) {
-            resultInitial = [];
-            data.forEach((key, value) {
-              resultInitial?.add(value.toString());
-            });
-          } else {
-            resultInitial = [data.toString()];
-          }
-        } else {
-          print("Nenhum dado encontrado.");
-        }
-      });
+        Map<String, dynamic> map = rawMap.map(
+          (key, value) => MapEntry(key.toString(), value),
+        );
+        resultInitial = List<String>.from(map["itens"]);
+      }
     } catch (e) {
       print(e);
     }
   }
+  //{to_do: {itens: [estudar, trabalhar, codar]}}
 }

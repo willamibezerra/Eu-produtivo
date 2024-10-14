@@ -29,17 +29,10 @@ class _SprintPageState extends State<SprintPage> {
   final DatabaseReference databaseRef =
       FirebaseDatabase.instance.ref().child('tasks');
 
-  void _listenToTasks() {
-    databaseRef.onValue.listen((DatabaseEvent event) {
-      final data = event.snapshot.value;
-      if (data != null && data is Map) {
-        tasks?.clear();
-        data.forEach((key, value) {
-          tasks?.add(value.toString());
-        });
-        setState(() {});
-      }
-    });
+  @override
+  void initState() {
+    widget.controller.loadTask();
+    super.initState();
   }
 
   final Future<FirebaseApp> _fApp = Firebase.initializeApp();
@@ -143,17 +136,6 @@ class _SprintPageState extends State<SprintPage> {
               const SizedBox(
                 height: 40,
               ),
-              IconButton(
-                  onPressed: () async {
-                    final snapshot = await _sprintDataBase.get();
-
-                    if (snapshot.exists) {
-                      setState(() {
-                        result = snapshot.value.toString();
-                      });
-                    }
-                  },
-                  icon: Icon(Icons.add)),
               Row(
                 children: [
                   const SizedBox(
