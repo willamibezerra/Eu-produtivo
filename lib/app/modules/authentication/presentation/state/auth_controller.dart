@@ -13,15 +13,26 @@ abstract class AuthControllerBase with Store {
   bool? createAccountSucess;
   @observable
   bool? isLoading;
+  @observable
+  ObservableFuture<void>? loadSignFuture;
+
   String? creatUser;
   String? failureCreateUser;
   AuthControllerBase(
     this.repository,
   );
+  @action
+  Future<void> signFuture(
+      {required String email, required String password}) async {
+    try {
+      loadSignFuture = ObservableFuture(
+          signInWithEmailAndPassword(email: email, password: password));
+    } catch (e) {
+      print("Erro ao carregar tarefas: $e");
+    }
+  }
 
   @action
-
-
   Future<void> signInWithEmailAndPassword(
       {required String email, required String password}) async {
     final result = await repository.signInWithEmailAndpasswordRepository(

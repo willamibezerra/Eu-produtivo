@@ -57,6 +57,30 @@ mixin _$ItensSprintController on ItensSprintControllerBase, Store {
     });
   }
 
+  late final _$loadTaskFutureAtom =
+      Atom(name: 'ItensSprintControllerBase.loadTaskFuture', context: context);
+
+  @override
+  ObservableFuture<void>? get loadTaskFuture {
+    _$loadTaskFutureAtom.reportRead();
+    return super.loadTaskFuture;
+  }
+
+  @override
+  set loadTaskFuture(ObservableFuture<void>? value) {
+    _$loadTaskFutureAtom.reportWrite(value, super.loadTaskFuture, () {
+      super.loadTaskFuture = value;
+    });
+  }
+
+  late final _$toDoItemAsyncAction =
+      AsyncAction('ItensSprintControllerBase.toDoItem', context: context);
+
+  @override
+  Future<void> toDoItem(String item, int? index) {
+    return _$toDoItemAsyncAction.run(() => super.toDoItem(item, index));
+  }
+
   late final _$loadTaskAsyncAction =
       AsyncAction('ItensSprintControllerBase.loadTask', context: context);
 
@@ -65,12 +89,71 @@ mixin _$ItensSprintController on ItensSprintControllerBase, Store {
     return _$loadTaskAsyncAction.run(() => super.loadTask());
   }
 
+  late final _$ItensSprintControllerBaseActionController =
+      ActionController(name: 'ItensSprintControllerBase', context: context);
+
+  @override
+  void loadInProgress(String itens, int index, bool isRight) {
+    final _$actionInfo = _$ItensSprintControllerBaseActionController
+        .startAction(name: 'ItensSprintControllerBase.loadInProgress');
+    try {
+      return super.loadInProgress(itens, index, isRight);
+    } finally {
+      _$ItensSprintControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void changeToConclued(String itens, int index) {
+    final _$actionInfo = _$ItensSprintControllerBaseActionController
+        .startAction(name: 'ItensSprintControllerBase.changeToConclued');
+    try {
+      return super.changeToConclued(itens, index);
+    } finally {
+      _$ItensSprintControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic deleteItenToDO(int index) {
+    final _$actionInfo = _$ItensSprintControllerBaseActionController
+        .startAction(name: 'ItensSprintControllerBase.deleteItenToDO');
+    try {
+      return super.deleteItenToDO(index);
+    } finally {
+      _$ItensSprintControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic deleteItenInProgress(int index) {
+    final _$actionInfo = _$ItensSprintControllerBaseActionController
+        .startAction(name: 'ItensSprintControllerBase.deleteItenInProgress');
+    try {
+      return super.deleteItenInProgress(index);
+    } finally {
+      _$ItensSprintControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic deleteconcludes(int index) {
+    final _$actionInfo = _$ItensSprintControllerBaseActionController
+        .startAction(name: 'ItensSprintControllerBase.deleteconcludes');
+    try {
+      return super.deleteconcludes(index);
+    } finally {
+      _$ItensSprintControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
 resultInProgress: ${resultInProgress},
 resultInitial: ${resultInitial},
-conclued: ${conclued}
+conclued: ${conclued},
+loadTaskFuture: ${loadTaskFuture}
     ''';
   }
 }

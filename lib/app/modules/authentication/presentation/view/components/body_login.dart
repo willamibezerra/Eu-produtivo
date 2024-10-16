@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_convert/app/modules/authentication/presentation/state/auth_controller.dart';
@@ -7,6 +8,7 @@ import 'package:image_convert/app/modules/authentication/presentation/view/compo
 import 'package:image_convert/app/modules/authentication/presentation/view/components/rounded_input_field.dart';
 import 'package:image_convert/app/shared/widgets/rounded_button.dart';
 import 'package:image_convert/app/shared/widgets/style/app_colors.dart';
+import 'package:mobx/mobx.dart';
 
 class BodyLogin extends StatefulWidget {
   const BodyLogin({
@@ -96,30 +98,36 @@ class _BodyLoginState extends State<BodyLogin> {
               suffixIcon:
                   isPasswordVisible ? Icons.visibility_off : Icons.visibility,
             ),
-            RoundedButton(
-                isLoading: widget.controller.isLoading ?? false,
-                press: () {
-                  if (_formKeyEmail.currentState?.validate() ?? false) {
-                    widget.controller.signInWithEmailAndPassword(
-                        email: _emailController.text,
-                        password: _passwordController.text);
-                    widget.controller.listenStateSignIn(onSuccess: () {
-                      Modular.to.pushNamedAndRemoveUntil(
-                        '/home/',
-                        (p0) => false,
-                      );
-                    }, onFailure: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          backgroundColor: Colors.red,
-                          content: Text('falha ao entrar'),
-                        ),
-                      );
-                    });
-                  }
-                },
-                size: widget.size,
-                text: 'LOGIN'),
+            Observer(
+              builder: (context) {
+                final future = widget.controller.loadSignFuture;
+
+                return RoundedButton(
+                    isLoading: future?.status == FutureStatus.pending,
+                    press: () {
+                      if (_formKeyEmail.currentState?.validate() ?? false) {
+                        widget.controller.signFuture(
+                            email: _emailController.text,
+                            password: _passwordController.text);
+                        widget.controller.listenStateSignIn(onSuccess: () {
+                          Modular.to.pushNamedAndRemoveUntil(
+                            '/home/',
+                            (p0) => false,
+                          );
+                        }, onFailure: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              backgroundColor: Colors.red,
+                              content: Text('falha ao entrar'),
+                            ),
+                          );
+                        });
+                      }
+                    },
+                    size: widget.size,
+                    text: 'LOGIN');
+              },
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

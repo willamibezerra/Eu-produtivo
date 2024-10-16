@@ -15,11 +15,13 @@ abstract class ItensSprintControllerBase with Store {
   List<String>? resultInitial;
   @observable
   List<String>? conclued;
+  @observable
+  ObservableFuture<void>? loadTaskFuture;
 
   final DatabaseReference _sprintDataBase =
       FirebaseDatabase.instance.ref().child('to_do');
-
-  void toDoItem(String item, int? index) async {
+  @action
+  Future<void> toDoItem(String item, int? index) async {
     DatabaseReference ref = FirebaseDatabase.instance.ref("to_do");
 
     if (resultInitial != null) {
@@ -33,6 +35,7 @@ abstract class ItensSprintControllerBase with Store {
     await ref.update({"itens": resultInitial});
   }
 
+  @action
   void loadInProgress(String itens, int index, bool isRight) {
     if (resultInProgress != null && resultInProgress!.isNotEmpty) {
       resultInProgress!.add(itens);
@@ -45,6 +48,7 @@ abstract class ItensSprintControllerBase with Store {
     }
   }
 
+  @action
   void changeToConclued(String itens, int index) {
     if (conclued != null && conclued!.isNotEmpty) {
       conclued!.add(itens);
@@ -57,18 +61,21 @@ abstract class ItensSprintControllerBase with Store {
     }
   }
 
+  @action
   deleteItenToDO(int index) {
     if (resultInitial != null && resultInitial!.isNotEmpty) {
       resultInitial!.removeAt(index);
     }
   }
 
+  @action
   deleteItenInProgress(int index) {
     if (resultInProgress != null && resultInProgress!.isNotEmpty) {
       resultInProgress!.removeAt(index);
     }
   }
 
+  @action
   deleteconcludes(int index) {
     if (conclued != null && conclued!.isNotEmpty) {
       conclued!.removeAt(index);
@@ -77,37 +84,32 @@ abstract class ItensSprintControllerBase with Store {
 
   @action
   Future<void> loadTask() async {
-    autorun(
-      (p0) async {
-        try {
-          final snapshot = await _sprintDataBase.get();
-          if (snapshot.exists) {
-            Map<Object?, Object?> rawMap =
-                snapshot.value as Map<Object?, Object?>;
+    try {
+      loadTaskFuture = ObservableFuture(
+        _loadTaskFromDatabase(),
+      );
 
-            Map<String, dynamic> map = rawMap.map(
-              (key, value) => MapEntry(key.toString(), value),
-            );
-            resultInitial = List<String>.from(map["itens"]);
-          }
-        } catch (e) {
-          print(e);
-        }
-      },
-    );
+      await loadTaskFuture;
+    } catch (e) {
+      print("Erro ao carregar tarefas: $e");
+    }
   }
 
-  Future<void> listenGetItens(
-      {required Function onSuccess, required Function onFailure}) async {
-    autorun(
-      (p0) {
-        if (resultInitial != null) {
-          onSuccess();
-        } else {
-          onFailure();
-        }
-      },
-    );
+  Future<void> _loadTaskFromDatabase() async {
+    try {
+      final snapshot = await _sprintDataBase.get();
+      if (snapshot.exists) {
+        Map<Object?, Object?> rawMap = snapshot.value as Map<Object?, Object?>;
+
+        Map<String, dynamic> map = rawMap.map(
+          (key, value) => MapEntry(key.toString(), value),
+        );
+
+        // Atualiza a lista de tarefas inicial
+        resultInitial = List<String>.from(map["itens"]);
+      }
+    } catch (e) {
+      print("Erro ao carregar tarefas: $e");
+    }
   }
 }
-  //{to_do: {itens: [estudar, trabalhar, codar]}}

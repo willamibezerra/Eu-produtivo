@@ -67,7 +67,7 @@ class _SprintCardWidgetState extends State<SprintCardWidget> {
                       feedback: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: cardWidget(
-                          startDrag,
+                          true,
                           null,
                           () {},
                         ),
@@ -75,8 +75,7 @@ class _SprintCardWidgetState extends State<SprintCardWidget> {
                       childWhenDragging: Container(),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child:
-                            cardWidget(startDrag, widget.content![index], () {
+                        child: cardWidget(false, widget.content![index], () {
                           widget.onTapDelete!(index);
                         }),
                       ),

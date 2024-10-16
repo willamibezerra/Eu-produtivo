@@ -57,6 +57,22 @@ mixin _$AuthController on AuthControllerBase, Store {
     });
   }
 
+  late final _$loadSignFutureAtom =
+      Atom(name: 'AuthControllerBase.loadSignFuture', context: context);
+
+  @override
+  ObservableFuture<void>? get loadSignFuture {
+    _$loadSignFutureAtom.reportRead();
+    return super.loadSignFuture;
+  }
+
+  @override
+  set loadSignFuture(ObservableFuture<void>? value) {
+    _$loadSignFutureAtom.reportWrite(value, super.loadSignFuture, () {
+      super.loadSignFuture = value;
+    });
+  }
+
   late final _$signInWithEmailAndPasswordAsyncAction = AsyncAction(
       'AuthControllerBase.signInWithEmailAndPassword',
       context: context);
@@ -73,7 +89,8 @@ mixin _$AuthController on AuthControllerBase, Store {
     return '''
 signInSucess: ${signInSucess},
 createAccountSucess: ${createAccountSucess},
-isLoading: ${isLoading}
+isLoading: ${isLoading},
+loadSignFuture: ${loadSignFuture}
     ''';
   }
 }

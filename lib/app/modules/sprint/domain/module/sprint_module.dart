@@ -10,10 +10,12 @@ class HomeModule extends Module {
 
   @override
   void routes(RouteManager r) {
-    r.child('/',
-        child: (context) => SprintPage(
-              controller: Modular.get(),
-            ));
+    r.child(
+      '/',
+      child: (context) => SprintPage(
+        controller: Modular.get(),
+      ),
+    );
     super.routes(r);
   }
 }

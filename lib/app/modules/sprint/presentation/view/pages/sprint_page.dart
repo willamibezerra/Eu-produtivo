@@ -2,10 +2,14 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 import 'package:image_convert/app/modules/sprint/presentation/view/state/controllers/itens_sprint_controller.dart';
+import 'package:image_convert/app/modules/sprint/presentation/view/widgets/body_sprint_widget.dart';
 import 'package:image_convert/app/modules/sprint/presentation/view/widgets/sprint_card_widget.dart';
 import 'package:image_convert/app/shared/widgets/style/app_colors.dart';
+import 'package:mobx/mobx.dart';
 
 class SprintPage extends StatefulWidget {
   final ItensSprintController controller;
@@ -19,7 +23,6 @@ class SprintPage extends StatefulWidget {
 }
 
 class _SprintPageState extends State<SprintPage> {
-  bool startDrag = false;
   List<String>? tasks;
   String result = "";
 
@@ -30,9 +33,13 @@ class _SprintPageState extends State<SprintPage> {
       FirebaseDatabase.instance.ref().child('tasks');
 
   @override
+  @override
   void initState() {
-    widget.controller.loadTask();
     super.initState();
+
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      widget.controller.loadTask();
+    });
   }
 
   final Future<FirebaseApp> _fApp = Firebase.initializeApp();
@@ -77,13 +84,14 @@ class _SprintPageState extends State<SprintPage> {
                             height: 50,
                           ),
                           ElevatedButton(
-                              onPressed: () {
-                                widget.controller
-                                    .toDoItem(taskController.text, null);
+                            onPressed: () {
+                              widget.controller
+                                  .toDoItem(taskController.text, null);
 
-                                Navigator.pop(context);
-                              },
-                              child: const Text('Salvar'))
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Salvar'),
+                          )
                         ],
                       ),
                     ),
@@ -106,150 +114,39 @@ class _SprintPageState extends State<SprintPage> {
           ),
         ),
         drawer: const Drawer(),
-        body: FutureBuilder(
-          future: _fApp,
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return const Text('erro');
-            } else if (snapshot.hasData) {
-              return bodyContent(context, screenWidth);
+        body: Observer(
+          builder: (context) {
+            final future = widget.controller.loadTaskFuture;
+
+            if (future == null || future.status == FutureStatus.pending) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (future.status == FutureStatus.rejected) {
+              return const Center(child: Text("Erro ao carregar tarefas."));
+            }
+            final tasks = widget.controller.resultInitial;
+
+            if (tasks != null || tasks!.isNotEmpty) {
+              return BodySprintWidget(
+                controller: widget.controller,
+                screenWidth: screenWidth,
+                carouselController: _carouselController,
+              );
             } else {
-              return const CircularProgressIndicator();
+              return Container();
             }
           },
         ));
   }
-
-  Stack bodyContent(BuildContext context, double screenWidth) {
-    DatabaseReference _sprintDataBase =
-        FirebaseDatabase.instance.ref().child('tasks');
-    _sprintDataBase.onValue.listen(
-      (event) {
-        result = event.snapshot.value.toString();
-      },
-    );
-    return Stack(
-      children: [
-        SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 40,
-              ),
-              Row(
-                children: [
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  Expanded(
-                    child: CarouselSlider(
-                      carouselController: _carouselController,
-                      options: CarouselOptions(
-                        autoPlayAnimationDuration:
-                            const Duration(microseconds: 100),
-                        height: MediaQuery.of(context).size.height * 0.8,
-                        enableInfiniteScroll: false,
-                      ),
-                      items: [
-                        Builder(
-                          builder: (BuildContext context) {
-                            return SprintCardWidget(
-                                onTapDelete: (index) {
-                                  widget.controller.deleteItenToDO(index);
-                                },
-                                onDragEnd: (details, index) {
-                                  if (details.offset.dx > screenWidth * 0.6) {
-                                    widget.controller.loadInProgress(
-                                        widget.controller.resultInitial![index],
-                                        index,
-                                        true);
-
-                                    _carouselController.nextPage();
-                                  }
-                                  setState(() {
-                                    startDrag = false;
-                                  });
-                                },
-                                title: 'Para fazer',
-                                content: widget.controller.resultInitial);
-                            // controller.resultInitial);
-                          },
-                        ),
-                        Builder(
-                          builder: (BuildContext context) {
-                            return SprintCardWidget(
-                              onTapDelete: (index) {
-                                widget.controller.deleteItenInProgress(index);
-                                setState(() {});
-                              },
-                              onDragEnd: (details, index) {
-                                if (details.offset.dx > screenWidth * 0.6) {
-                                  widget.controller.changeToConclued(
-                                      widget
-                                          .controller.resultInProgress![index],
-                                      index);
-
-                                  _carouselController.nextPage();
-                                } else if (details.offset.dx <
-                                    screenWidth * 0.16) {
-                                  widget.controller.toDoItem(
-                                      widget
-                                          .controller.resultInProgress![index],
-                                      index);
-                                  _carouselController.previousPage();
-                                }
-                                setState(() {
-                                  startDrag = false;
-                                });
-                              },
-                              title: 'Em progresso',
-                              content: widget.controller.resultInProgress,
-                            );
-                          },
-                        ),
-                        Builder(
-                          builder: (BuildContext context) {
-                            return SprintCardWidget(
-                              onTapDelete: (index) {
-                                widget.controller.deleteconcludes(index);
-                              },
-                              onDragEnd: (details, index) {
-                                if (details.offset.dx < screenWidth * 0.6) {
-                                  widget.controller.loadInProgress(
-                                      widget.controller.conclued![index],
-                                      index,
-                                      false);
-                                  widget.controller.deleteconcludes(index);
-                                  _carouselController.previousPage();
-                                  setState(() {});
-                                }
-                              },
-                              title: 'Feito',
-                              content: widget.controller.conclued,
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
 }
 
-Widget cardWidget(bool isdraged, String? task, VoidCallback onTapDelete) {
+Widget cardWidget(bool elevation, String? task, VoidCallback onTapDelete) {
   return Positioned(
     child: SizedBox(
       width: 150,
       child: Container(
         decoration:
             BoxDecoration(color: AppColors.kPrimaryLiggtColor, boxShadow: [
-          if (!isdraged)
+          if (elevation)
             BoxShadow(
               color: Colors.grey.withOpacity(0.5),
               spreadRadius: 5,
@@ -274,11 +171,12 @@ Widget cardWidget(bool isdraged, String? task, VoidCallback onTapDelete) {
                             ),
                           ),
                           IconButton(
-                              onPressed: onTapDelete,
-                              icon: const Icon(
-                                Icons.delete,
-                                color: Colors.red,
-                              ))
+                            onPressed: onTapDelete,
+                            icon: const Icon(
+                              Icons.delete,
+                              color: Colors.red,
+                            ),
+                          )
                         ],
                       ),
                       const SizedBox(
