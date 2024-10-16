@@ -73,6 +73,15 @@ mixin _$AuthController on AuthControllerBase, Store {
     });
   }
 
+  late final _$signFutureAsyncAction =
+      AsyncAction('AuthControllerBase.signFuture', context: context);
+
+  @override
+  Future<void> signFuture({required String email, required String password}) {
+    return _$signFutureAsyncAction
+        .run(() => super.signFuture(email: email, password: password));
+  }
+
   late final _$signInWithEmailAndPasswordAsyncAction = AsyncAction(
       'AuthControllerBase.signInWithEmailAndPassword',
       context: context);

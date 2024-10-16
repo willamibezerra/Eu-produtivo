@@ -1,14 +1,17 @@
 import 'dart:convert';
 
 import 'package:firebase_database/firebase_database.dart';
-
 import 'package:mobx/mobx.dart';
+
+import 'package:image_convert/app/modules/sprint/domain/repositories/interfaces/load_todo_itens_repository_interface.dart';
+
 part 'itens_sprint_controller.g.dart';
 
 class ItensSprintController = ItensSprintControllerBase
     with _$ItensSprintController;
 
 abstract class ItensSprintControllerBase with Store {
+  final IloadTodoItensRepository todoItensRepository;
   @observable
   List<String>? resultInProgress;
   @observable
@@ -17,6 +20,13 @@ abstract class ItensSprintControllerBase with Store {
   List<String>? conclued;
   @observable
   ObservableFuture<void>? loadTaskFuture;
+  ItensSprintControllerBase({
+    required this.todoItensRepository,
+    this.resultInProgress,
+    this.resultInitial,
+    this.conclued,
+    this.loadTaskFuture,
+  });
 
   final DatabaseReference _sprintDataBase =
       FirebaseDatabase.instance.ref().child('to_do');
@@ -85,9 +95,7 @@ abstract class ItensSprintControllerBase with Store {
   @action
   Future<void> loadTask() async {
     try {
-      loadTaskFuture = ObservableFuture(
-        _loadTaskFromDatabase(),
-      );
+      loadTaskFuture = ObservableFuture(loadTaskFromDatabase());
 
       await loadTaskFuture;
     } catch (e) {
@@ -95,21 +103,15 @@ abstract class ItensSprintControllerBase with Store {
     }
   }
 
-  Future<void> _loadTaskFromDatabase() async {
-    try {
-      final snapshot = await _sprintDataBase.get();
-      if (snapshot.exists) {
-        Map<Object?, Object?> rawMap = snapshot.value as Map<Object?, Object?>;
+  @action
+  Future<void> loadTaskFromDatabase() async {
+    resultInitial = await todoItensRepository.loadTaskFromDatabaseRepository(
+        tableTitle: 'to_do');
+  }
 
-        Map<String, dynamic> map = rawMap.map(
-          (key, value) => MapEntry(key.toString(), value),
-        );
-
-        // Atualiza a lista de tarefas inicial
-        resultInitial = List<String>.from(map["itens"]);
-      }
-    } catch (e) {
-      print("Erro ao carregar tarefas: $e");
-    }
+  @action
+  Future<void> loadProgressTaskFromDatabase() async {
+    resultInProgress = await todoItensRepository.loadTaskFromDatabaseRepository(
+        tableTitle: 'progress');
   }
 }

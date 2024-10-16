@@ -42,7 +42,6 @@ class _SprintPageState extends State<SprintPage> {
     });
   }
 
-  final Future<FirebaseApp> _fApp = Firebase.initializeApp();
   @override
   Widget build(BuildContext context) {
     final taskController = TextEditingController();

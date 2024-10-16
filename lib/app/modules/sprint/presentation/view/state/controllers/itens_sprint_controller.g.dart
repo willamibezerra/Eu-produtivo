@@ -89,6 +89,16 @@ mixin _$ItensSprintController on ItensSprintControllerBase, Store {
     return _$loadTaskAsyncAction.run(() => super.loadTask());
   }
 
+  late final _$loadTaskFromDatabaseAsyncAction = AsyncAction(
+      'ItensSprintControllerBase.loadTaskFromDatabase',
+      context: context);
+
+  @override
+  Future<void> loadTaskFromDatabase() {
+    return _$loadTaskFromDatabaseAsyncAction
+        .run(() => super.loadTaskFromDatabase());
+  }
+
   late final _$ItensSprintControllerBaseActionController =
       ActionController(name: 'ItensSprintControllerBase', context: context);
 
