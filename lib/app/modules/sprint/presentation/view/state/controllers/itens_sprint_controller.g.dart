@@ -73,12 +73,37 @@ mixin _$ItensSprintController on ItensSprintControllerBase, Store {
     });
   }
 
+  late final _$loadprogessFutureAtom = Atom(
+      name: 'ItensSprintControllerBase.loadprogessFuture', context: context);
+
+  @override
+  ObservableFuture<void>? get loadprogessFuture {
+    _$loadprogessFutureAtom.reportRead();
+    return super.loadprogessFuture;
+  }
+
+  @override
+  set loadprogessFuture(ObservableFuture<void>? value) {
+    _$loadprogessFutureAtom.reportWrite(value, super.loadprogessFuture, () {
+      super.loadprogessFuture = value;
+    });
+  }
+
   late final _$toDoItemAsyncAction =
       AsyncAction('ItensSprintControllerBase.toDoItem', context: context);
 
   @override
   Future<void> toDoItem(String item, int? index) {
     return _$toDoItemAsyncAction.run(() => super.toDoItem(item, index));
+  }
+
+  late final _$loadInProgressAsyncAction =
+      AsyncAction('ItensSprintControllerBase.loadInProgress', context: context);
+
+  @override
+  Future<void> loadInProgress(String itens, int index, bool isRight) {
+    return _$loadInProgressAsyncAction
+        .run(() => super.loadInProgress(itens, index, isRight));
   }
 
   late final _$loadTaskAsyncAction =
@@ -99,19 +124,18 @@ mixin _$ItensSprintController on ItensSprintControllerBase, Store {
         .run(() => super.loadTaskFromDatabase());
   }
 
-  late final _$ItensSprintControllerBaseActionController =
-      ActionController(name: 'ItensSprintControllerBase', context: context);
+  late final _$loadProgressTaskFromDatabaseAsyncAction = AsyncAction(
+      'ItensSprintControllerBase.loadProgressTaskFromDatabase',
+      context: context);
 
   @override
-  void loadInProgress(String itens, int index, bool isRight) {
-    final _$actionInfo = _$ItensSprintControllerBaseActionController
-        .startAction(name: 'ItensSprintControllerBase.loadInProgress');
-    try {
-      return super.loadInProgress(itens, index, isRight);
-    } finally {
-      _$ItensSprintControllerBaseActionController.endAction(_$actionInfo);
-    }
+  Future<void> loadProgressTaskFromDatabase() {
+    return _$loadProgressTaskFromDatabaseAsyncAction
+        .run(() => super.loadProgressTaskFromDatabase());
   }
+
+  late final _$ItensSprintControllerBaseActionController =
+      ActionController(name: 'ItensSprintControllerBase', context: context);
 
   @override
   void changeToConclued(String itens, int index) {
@@ -163,7 +187,8 @@ mixin _$ItensSprintController on ItensSprintControllerBase, Store {
 resultInProgress: ${resultInProgress},
 resultInitial: ${resultInitial},
 conclued: ${conclued},
-loadTaskFuture: ${loadTaskFuture}
+loadTaskFuture: ${loadTaskFuture},
+loadprogessFuture: ${loadprogessFuture}
     ''';
   }
 }

@@ -48,93 +48,96 @@ class _SprintPageState extends State<SprintPage> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          child: const Icon(
-            Icons.add,
-            size: 50,
-            color: Colors.blue,
-            shadows: [
-              Shadow(
-                offset: Offset(2, 2),
-                blurRadius: 4,
-                color: Colors.white,
-              ),
-            ],
-          ),
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: Expanded(
-                    child: SizedBox(
-                      height: 200,
-                      width: 200,
-                      child: Column(
-                        children: [
-                          const Text(
-                            'Adicionar tarefa',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          TextField(
-                            controller: taskController,
-                          ),
-                          const SizedBox(
-                            height: 50,
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              widget.controller
-                                  .toDoItem(taskController.text, null);
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(
+          Icons.add,
+          size: 50,
+          color: Colors.blue,
+          shadows: [
+            Shadow(
+              offset: Offset(2, 2),
+              blurRadius: 4,
+              color: Colors.white,
+            ),
+          ],
+        ),
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Expanded(
+                  child: SizedBox(
+                    height: 200,
+                    width: 200,
+                    child: Column(
+                      children: [
+                        const Text(
+                          'Adicionar tarefa',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        TextField(
+                          controller: taskController,
+                        ),
+                        const SizedBox(
+                          height: 50,
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            widget.controller
+                                .toDoItem(taskController.text, null);
 
-                              Navigator.pop(context);
-                            },
-                            child: const Text('Salvar'),
-                          )
-                        ],
-                      ),
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Salvar'),
+                        )
+                      ],
                     ),
                   ),
-                );
-              },
-            );
-          },
-        ),
-        backgroundColor: Colors.grey[300],
-        appBar: AppBar(
-          iconTheme: const IconThemeData(color: Colors.white),
-          backgroundColor: AppColors.kPrimaryColor,
-          title: const Center(
-            child: Text(
-              'Sprint',
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
+                ),
+              );
+            },
+          );
+        },
+      ),
+      backgroundColor: Colors.grey[300],
+      appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.white),
+        backgroundColor: AppColors.kPrimaryColor,
+        title: const Center(
+          child: Text(
+            'Sprint',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
         ),
-        drawer: const Drawer(),
-        body: Observer(
-          builder: (context) {
-            final future = widget.controller.loadTaskFuture;
+      ),
+      drawer: const Drawer(),
+      body: Observer(
+        builder: (context) {
+          final futureProgress = widget.controller.loadprogessFuture;
+          final futureInitial = widget.controller.loadTaskFuture;
+          if (futureProgress == null ||
+              futureProgress.status == FutureStatus.pending ||
+              futureInitial == null ||
+              futureInitial.status == FutureStatus.pending) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (futureInitial.status == FutureStatus.rejected) {
+            return const Center(child: Text("Erro ao carregar tarefas."));
+          }
+          final tasks = widget.controller.resultInProgress;
 
-            if (future == null || future.status == FutureStatus.pending) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (future.status == FutureStatus.rejected) {
-              return const Center(child: Text("Erro ao carregar tarefas."));
-            }
-            final tasks = widget.controller.resultInitial;
-
-            if (tasks != null || tasks!.isNotEmpty) {
-              return BodySprintWidget(
-                controller: widget.controller,
-                screenWidth: screenWidth,
-                carouselController: _carouselController,
-              );
-            } else {
-              return Container();
-            }
-          },
-        ));
+          if (tasks != null || tasks!.isNotEmpty) {
+            return BodySprintWidget(
+              controller: widget.controller,
+              screenWidth: screenWidth,
+              carouselController: _carouselController,
+            );
+          } else {
+            return Container();
+          }
+        },
+      ),
+    );
   }
 }
 

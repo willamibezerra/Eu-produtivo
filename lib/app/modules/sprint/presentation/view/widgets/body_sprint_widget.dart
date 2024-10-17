@@ -52,6 +52,7 @@ class _BodySprintWidgetState extends State<BodySprintWidget> {
                             return SprintCardWidget(
                                 onTapDelete: (index) {
                                   widget.controller.deleteItenToDO(index);
+                                  setState(() {});
                                 },
                                 onDragEnd: (details, index) {
                                   if (details.offset.dx >

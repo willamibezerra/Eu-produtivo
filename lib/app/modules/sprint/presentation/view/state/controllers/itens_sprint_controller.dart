@@ -20,6 +20,9 @@ abstract class ItensSprintControllerBase with Store {
   List<String>? conclued;
   @observable
   ObservableFuture<void>? loadTaskFuture;
+  @observable
+  ObservableFuture<void>? loadprogessFuture;
+
   ItensSprintControllerBase({
     required this.todoItensRepository,
     this.resultInProgress,
@@ -28,8 +31,6 @@ abstract class ItensSprintControllerBase with Store {
     this.loadTaskFuture,
   });
 
-  final DatabaseReference _sprintDataBase =
-      FirebaseDatabase.instance.ref().child('to_do');
   @action
   Future<void> toDoItem(String item, int? index) async {
     DatabaseReference ref = FirebaseDatabase.instance.ref("to_do");
@@ -46,7 +47,9 @@ abstract class ItensSprintControllerBase with Store {
   }
 
   @action
-  void loadInProgress(String itens, int index, bool isRight) {
+  Future<void> loadInProgress(String itens, int index, bool isRight) async {
+    DatabaseReference ref = FirebaseDatabase.instance.ref("progress");
+
     if (resultInProgress != null && resultInProgress!.isNotEmpty) {
       resultInProgress!.add(itens);
     } else {
@@ -56,6 +59,7 @@ abstract class ItensSprintControllerBase with Store {
     if (isRight && resultInitial != null) {
       deleteItenToDO(index);
     }
+    await ref.update({"itens": resultInProgress});
   }
 
   @action
@@ -96,8 +100,9 @@ abstract class ItensSprintControllerBase with Store {
   Future<void> loadTask() async {
     try {
       loadTaskFuture = ObservableFuture(loadTaskFromDatabase());
-
+      loadprogessFuture = ObservableFuture(loadProgressTaskFromDatabase());
       await loadTaskFuture;
+      await loadprogessFuture;
     } catch (e) {
       print("Erro ao carregar tarefas: $e");
     }
