@@ -89,6 +89,22 @@ mixin _$ItensSprintController on ItensSprintControllerBase, Store {
     });
   }
 
+  late final _$loadconcludesFutureAtom = Atom(
+      name: 'ItensSprintControllerBase.loadconcludesFuture', context: context);
+
+  @override
+  ObservableFuture<void>? get loadconcludesFuture {
+    _$loadconcludesFutureAtom.reportRead();
+    return super.loadconcludesFuture;
+  }
+
+  @override
+  set loadconcludesFuture(ObservableFuture<void>? value) {
+    _$loadconcludesFutureAtom.reportWrite(value, super.loadconcludesFuture, () {
+      super.loadconcludesFuture = value;
+    });
+  }
+
   late final _$toDoItemAsyncAction =
       AsyncAction('ItensSprintControllerBase.toDoItem', context: context);
 
@@ -104,6 +120,43 @@ mixin _$ItensSprintController on ItensSprintControllerBase, Store {
   Future<void> loadInProgress(String itens, int index, bool isRight) {
     return _$loadInProgressAsyncAction
         .run(() => super.loadInProgress(itens, index, isRight));
+  }
+
+  late final _$changeToConcluedAsyncAction = AsyncAction(
+      'ItensSprintControllerBase.changeToConclued',
+      context: context);
+
+  @override
+  Future<void> changeToConclued(String itens, int index) {
+    return _$changeToConcluedAsyncAction
+        .run(() => super.changeToConclued(itens, index));
+  }
+
+  late final _$deleteItenToDOAsyncAction =
+      AsyncAction('ItensSprintControllerBase.deleteItenToDO', context: context);
+
+  @override
+  Future<void> deleteItenToDO(int index) {
+    return _$deleteItenToDOAsyncAction.run(() => super.deleteItenToDO(index));
+  }
+
+  late final _$deleteItenInProgressAsyncAction = AsyncAction(
+      'ItensSprintControllerBase.deleteItenInProgress',
+      context: context);
+
+  @override
+  Future<void> deleteItenInProgress(int index) {
+    return _$deleteItenInProgressAsyncAction
+        .run(() => super.deleteItenInProgress(index));
+  }
+
+  late final _$deleteconcludesAsyncAction = AsyncAction(
+      'ItensSprintControllerBase.deleteconcludes',
+      context: context);
+
+  @override
+  Future<void> deleteconcludes(int index) {
+    return _$deleteconcludesAsyncAction.run(() => super.deleteconcludes(index));
   }
 
   late final _$loadTaskAsyncAction =
@@ -134,51 +187,14 @@ mixin _$ItensSprintController on ItensSprintControllerBase, Store {
         .run(() => super.loadProgressTaskFromDatabase());
   }
 
-  late final _$ItensSprintControllerBaseActionController =
-      ActionController(name: 'ItensSprintControllerBase', context: context);
+  late final _$loadConcludesTaskFromDatabaseAsyncAction = AsyncAction(
+      'ItensSprintControllerBase.loadConcludesTaskFromDatabase',
+      context: context);
 
   @override
-  void changeToConclued(String itens, int index) {
-    final _$actionInfo = _$ItensSprintControllerBaseActionController
-        .startAction(name: 'ItensSprintControllerBase.changeToConclued');
-    try {
-      return super.changeToConclued(itens, index);
-    } finally {
-      _$ItensSprintControllerBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  dynamic deleteItenToDO(int index) {
-    final _$actionInfo = _$ItensSprintControllerBaseActionController
-        .startAction(name: 'ItensSprintControllerBase.deleteItenToDO');
-    try {
-      return super.deleteItenToDO(index);
-    } finally {
-      _$ItensSprintControllerBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  dynamic deleteItenInProgress(int index) {
-    final _$actionInfo = _$ItensSprintControllerBaseActionController
-        .startAction(name: 'ItensSprintControllerBase.deleteItenInProgress');
-    try {
-      return super.deleteItenInProgress(index);
-    } finally {
-      _$ItensSprintControllerBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  dynamic deleteconcludes(int index) {
-    final _$actionInfo = _$ItensSprintControllerBaseActionController
-        .startAction(name: 'ItensSprintControllerBase.deleteconcludes');
-    try {
-      return super.deleteconcludes(index);
-    } finally {
-      _$ItensSprintControllerBaseActionController.endAction(_$actionInfo);
-    }
+  Future<void> loadConcludesTaskFromDatabase() {
+    return _$loadConcludesTaskFromDatabaseAsyncAction
+        .run(() => super.loadConcludesTaskFromDatabase());
   }
 
   @override
@@ -188,7 +204,8 @@ resultInProgress: ${resultInProgress},
 resultInitial: ${resultInitial},
 conclued: ${conclued},
 loadTaskFuture: ${loadTaskFuture},
-loadprogessFuture: ${loadprogessFuture}
+loadprogessFuture: ${loadprogessFuture},
+loadconcludesFuture: ${loadconcludesFuture}
     ''';
   }
 }

@@ -22,6 +22,8 @@ abstract class ItensSprintControllerBase with Store {
   ObservableFuture<void>? loadTaskFuture;
   @observable
   ObservableFuture<void>? loadprogessFuture;
+  @observable
+  ObservableFuture<void>? loadconcludesFuture;
 
   ItensSprintControllerBase({
     required this.todoItensRepository,
@@ -30,11 +32,12 @@ abstract class ItensSprintControllerBase with Store {
     this.conclued,
     this.loadTaskFuture,
   });
+  DatabaseReference refToDo = FirebaseDatabase.instance.ref("to_do");
+  DatabaseReference refinProgress = FirebaseDatabase.instance.ref("progress");
+  DatabaseReference refConcludes = FirebaseDatabase.instance.ref("concludes");
 
   @action
   Future<void> toDoItem(String item, int? index) async {
-    DatabaseReference ref = FirebaseDatabase.instance.ref("to_do");
-
     if (resultInitial != null) {
       resultInitial!.add(item);
     } else {
@@ -43,7 +46,7 @@ abstract class ItensSprintControllerBase with Store {
     if (resultInProgress != null && index != null) {
       deleteItenInProgress(index);
     }
-    await ref.update({"itens": resultInitial});
+    await refToDo.update({"itens": resultInitial});
   }
 
   @action
@@ -63,7 +66,9 @@ abstract class ItensSprintControllerBase with Store {
   }
 
   @action
-  void changeToConclued(String itens, int index) {
+  Future<void> changeToConclued(String itens, int index) async {
+    DatabaseReference ref = FirebaseDatabase.instance.ref("concludes");
+
     if (conclued != null && conclued!.isNotEmpty) {
       conclued!.add(itens);
     } else {
@@ -73,26 +78,30 @@ abstract class ItensSprintControllerBase with Store {
     if (resultInProgress != null) {
       deleteItenInProgress(index);
     }
+    await ref.update({"itens": conclued});
   }
 
   @action
-  deleteItenToDO(int index) {
+  Future<void> deleteItenToDO(int index) async {
     if (resultInitial != null && resultInitial!.isNotEmpty) {
       resultInitial!.removeAt(index);
+      await refToDo.update({"itens": resultInitial});
     }
   }
 
   @action
-  deleteItenInProgress(int index) {
+  Future<void> deleteItenInProgress(int index) async {
     if (resultInProgress != null && resultInProgress!.isNotEmpty) {
       resultInProgress!.removeAt(index);
+      await refinProgress.update({"itens": resultInProgress});
     }
   }
 
   @action
-  deleteconcludes(int index) {
+  Future<void> deleteconcludes(int index) async {
     if (conclued != null && conclued!.isNotEmpty) {
       conclued!.removeAt(index);
+      await refConcludes.update({"itens": conclued});
     }
   }
 
@@ -101,11 +110,12 @@ abstract class ItensSprintControllerBase with Store {
     try {
       loadTaskFuture = ObservableFuture(loadTaskFromDatabase());
       loadprogessFuture = ObservableFuture(loadProgressTaskFromDatabase());
+      loadconcludesFuture = ObservableFuture(loadConcludesTaskFromDatabase());
+
       await loadTaskFuture;
       await loadprogessFuture;
-    } catch (e) {
-      print("Erro ao carregar tarefas: $e");
-    }
+      await loadconcludesFuture;
+    } catch (e) {}
   }
 
   @action
@@ -118,5 +128,11 @@ abstract class ItensSprintControllerBase with Store {
   Future<void> loadProgressTaskFromDatabase() async {
     resultInProgress = await todoItensRepository.loadTaskFromDatabaseRepository(
         tableTitle: 'progress');
+  }
+
+  @action
+  Future<void> loadConcludesTaskFromDatabase() async {
+    conclued = await todoItensRepository.loadTaskFromDatabaseRepository(
+        tableTitle: 'concludes');
   }
 }

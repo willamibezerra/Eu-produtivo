@@ -116,24 +116,25 @@ class _SprintPageState extends State<SprintPage> {
         builder: (context) {
           final futureProgress = widget.controller.loadprogessFuture;
           final futureInitial = widget.controller.loadTaskFuture;
+          final futureConcludes = widget.controller.loadconcludesFuture;
+
           if (futureProgress == null ||
               futureProgress.status == FutureStatus.pending ||
               futureInitial == null ||
-              futureInitial.status == FutureStatus.pending) {
+              futureInitial.status == FutureStatus.pending ||
+              futureConcludes == null ||
+              futureConcludes.status == FutureStatus.pending) {
             return const Center(child: CircularProgressIndicator());
           } else if (futureInitial.status == FutureStatus.rejected) {
-            return const Center(child: Text("Erro ao carregar tarefas."));
-          }
-          final tasks = widget.controller.resultInProgress;
-
-          if (tasks != null || tasks!.isNotEmpty) {
+            return const Center(
+              child: Text("Erro ao carregar tarefas."),
+            );
+          } else {
             return BodySprintWidget(
               controller: widget.controller,
               screenWidth: screenWidth,
               carouselController: _carouselController,
             );
-          } else {
-            return Container();
           }
         },
       ),
