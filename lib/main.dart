@@ -6,7 +6,7 @@ import 'package:image_convert/app/shared/app_module.dart';
 import 'package:image_convert/app/shared/widgets/style/app_colors.dart';
 import 'package:image_convert/firebase_options.dart';
 
-Future<void> main() async {
+Future<void> main() async { 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

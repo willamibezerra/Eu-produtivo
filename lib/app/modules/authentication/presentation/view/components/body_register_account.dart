@@ -65,7 +65,9 @@ class _BodyRegisterAccountState extends State<BodyRegisterAccount> {
                     size: widget.size,
                     controller: _emailController,
                     textFieldKey: _formKeyEmail,
-                    validator: (p0) {},
+                    validator: (p0) {
+                      return null;
+                    },
                     onTapVisibleText: () {},
                     obscureText: false),
                 RoundedInputField(
@@ -78,7 +80,9 @@ class _BodyRegisterAccountState extends State<BodyRegisterAccount> {
                     size: widget.size,
                     controller: _passWordController,
                     textFieldKey: _formKeyPassword,
-                    validator: (p0) {},
+                    validator: (p0) {
+                      return null;
+                    },
                     onTapVisibleText: () {
                       setState(() {
                         isPasswordVisible = !isPasswordVisible;
@@ -96,7 +100,7 @@ class _BodyRegisterAccountState extends State<BodyRegisterAccount> {
                           if (widget.controller.createAccountSucess != null) {
                             if (widget.controller.createAccountSucess!) {
                               Modular.to.pushNamed('/auth/');
-                                   ScaffoldMessenger.of(context).showSnackBar(
+                              ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   backgroundColor: Colors.red,
                                   content: Text(

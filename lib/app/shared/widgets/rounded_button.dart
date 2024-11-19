@@ -26,10 +26,9 @@ class RoundedButton extends StatelessWidget {
       width: size.width * 0.8,
       child: ElevatedButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(color),
+          backgroundColor: WidgetStateProperty.all<Color>(color),
         ),
-        onPressed:
-            isLoading! ? null : press, // Desativa o botão se estiver carregando
+        onPressed: isLoading! ? null : press,
         child: isLoading!
             ? const Padding(
                 padding: EdgeInsets.all(15),

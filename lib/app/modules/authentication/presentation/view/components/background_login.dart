@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 class BackgroundLogin extends StatelessWidget {
   final Widget child;
-  double? leftPadding;
-  double? rightPadding;
+  final double? leftPadding;
+  final double? rightPadding;
 
-  BackgroundLogin({
+  const BackgroundLogin({
     Key? key,
     required this.child,
     this.leftPadding,
