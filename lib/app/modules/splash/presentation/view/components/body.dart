@@ -35,7 +35,10 @@ class Body extends StatelessWidget {
             RoundedButton(
               size: size,
               press: () {
-                Modular.to.pushNamed('/auth/');
+                Modular.to.pushNamedAndRemoveUntil(
+                  '/auth/',
+                  (p0) => false,
+                );
               },
               text: 'LOGIN',
             ),

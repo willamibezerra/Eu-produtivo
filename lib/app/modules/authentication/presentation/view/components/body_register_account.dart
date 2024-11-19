@@ -65,7 +65,9 @@ class _BodyRegisterAccountState extends State<BodyRegisterAccount> {
                     size: widget.size,
                     controller: _emailController,
                     textFieldKey: _formKeyEmail,
-                    validator: (p0) {},
+                    validator: (p0) {
+                      return null;
+                    },
                     onTapVisibleText: () {},
                     obscureText: false),
                 RoundedInputField(
@@ -78,26 +80,50 @@ class _BodyRegisterAccountState extends State<BodyRegisterAccount> {
                     size: widget.size,
                     controller: _passWordController,
                     textFieldKey: _formKeyPassword,
-                    validator: (p0) {},
+                    validator: (p0) {
+                      return null;
+                    },
                     onTapVisibleText: () {
                       setState(() {
                         isPasswordVisible = !isPasswordVisible;
                       });
                     },
                     obscureText: isPasswordVisible),
-                RoundedButton(
-                    press: () {
-                      widget.controller.createAccount(
-                          email: _emailController.text,
-                          password: _passWordController.text);
-                      if (widget.controller.createAccountSucess != null) {
-                        if (widget.controller.createAccountSucess!) {
-                          Modular.to.pushNamed('/auth/');
-                        }
-                      }
-                    },
-                    size: widget.size,
-                    text: 'Criar conta'),
+                Observer(
+                  builder: (_) {
+                    return RoundedButton(
+                        isLoading: widget.controller.isLoading ?? false,
+                        press: () {
+                          widget.controller.createAccount(
+                              email: _emailController.text,
+                              password: _passWordController.text);
+                          if (widget.controller.createAccountSucess != null) {
+                            if (widget.controller.createAccountSucess!) {
+                              Modular.to.pushNamed('/auth/');
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  backgroundColor: Colors.red,
+                                  content: Text(
+                                      widget.controller.failureCreateUser ??
+                                          ''),
+                                ),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  backgroundColor: Colors.red,
+                                  content: Text(
+                                      widget.controller.failureCreateUser ??
+                                          ''),
+                                ),
+                              );
+                            }
+                          }
+                        },
+                        size: widget.size,
+                        text: 'Criar conta');
+                  },
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

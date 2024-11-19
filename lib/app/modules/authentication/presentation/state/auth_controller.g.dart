@@ -41,6 +41,47 @@ mixin _$AuthController on AuthControllerBase, Store {
     });
   }
 
+  late final _$isLoadingAtom =
+      Atom(name: 'AuthControllerBase.isLoading', context: context);
+
+  @override
+  bool? get isLoading {
+    _$isLoadingAtom.reportRead();
+    return super.isLoading;
+  }
+
+  @override
+  set isLoading(bool? value) {
+    _$isLoadingAtom.reportWrite(value, super.isLoading, () {
+      super.isLoading = value;
+    });
+  }
+
+  late final _$loadSignFutureAtom =
+      Atom(name: 'AuthControllerBase.loadSignFuture', context: context);
+
+  @override
+  ObservableFuture<void>? get loadSignFuture {
+    _$loadSignFutureAtom.reportRead();
+    return super.loadSignFuture;
+  }
+
+  @override
+  set loadSignFuture(ObservableFuture<void>? value) {
+    _$loadSignFutureAtom.reportWrite(value, super.loadSignFuture, () {
+      super.loadSignFuture = value;
+    });
+  }
+
+  late final _$signFutureAsyncAction =
+      AsyncAction('AuthControllerBase.signFuture', context: context);
+
+  @override
+  Future<void> signFuture({required String email, required String password}) {
+    return _$signFutureAsyncAction
+        .run(() => super.signFuture(email: email, password: password));
+  }
+
   late final _$signInWithEmailAndPasswordAsyncAction = AsyncAction(
       'AuthControllerBase.signInWithEmailAndPassword',
       context: context);
@@ -56,7 +97,9 @@ mixin _$AuthController on AuthControllerBase, Store {
   String toString() {
     return '''
 signInSucess: ${signInSucess},
-createAccountSucess: ${createAccountSucess}
+createAccountSucess: ${createAccountSucess},
+isLoading: ${isLoading},
+loadSignFuture: ${loadSignFuture}
     ''';
   }
 }
