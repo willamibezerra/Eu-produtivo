@@ -49,6 +49,7 @@ dependencies:
   super_drag_and_drop: ^0.8.5
   carousel_slider: ^5.0.0
   firebase_database: ^10.5.7
+  flutter_onboarding_slider: ^1.0.11
 
 
   

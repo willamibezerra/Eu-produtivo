@@ -21,7 +21,7 @@ class AuthModule extends Module {
   void routes(RouteManager r) {
     r.child(
       '/',
-      child: (context) => AuthPage(controller: Modular.get()),
+      child: (context) => LoginPage(controller: Modular.get()),
     );
     r.child(
       '/register',
