@@ -1,5 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:image_convert/app/modules/splash/presentation/view/components/body.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -11,17 +12,21 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    // Future.delayed(
-    //   const Duration(seconds: 3),
-    //   () {
-    //     Modular.to.pushNamed('/auth/');
-    //   },
-    // );
+    timer();
     super.initState();
+  }
+
+  Future<void> timer() async {
+    await Future.delayed(const Duration(seconds: 2));
+    Modular.to.pushNamed('/onBoarding/');
   }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: Body());
+    return const Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
   }
 }
