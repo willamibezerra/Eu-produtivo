@@ -132,7 +132,9 @@ class _BodyRegisterAccountState extends State<BodyRegisterAccount> {
                       style: TextStyle(color: AppColors.kPrimaryColor),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
                       child: const Text('Fazer login'),
                     ),
                   ],

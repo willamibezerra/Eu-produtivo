@@ -13,6 +13,7 @@ import 'package:mobx/mobx.dart';
 
 class SprintPage extends StatefulWidget {
   final ItensSprintController controller;
+  
   const SprintPage({
     Key? key,
     required this.controller,
@@ -88,6 +89,9 @@ class _SprintPageState extends State<SprintPage> {
                                 .toDoItem(taskController.text, null);
 
                             Navigator.pop(context);
+                            setState(() {
+                              
+                            });
                           },
                           child: const Text('Salvar'),
                         )
@@ -102,6 +106,9 @@ class _SprintPageState extends State<SprintPage> {
       ),
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
+        actions: [
+          IconButton(onPressed: (){}, icon: const Icon(Icons.logout))
+        ],
         iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: AppColors.kPrimaryColor,
         title: const Center(
@@ -125,17 +132,19 @@ class _SprintPageState extends State<SprintPage> {
               futureConcludes == null ||
               futureConcludes.status == FutureStatus.pending) {
             return const Center(child: CircularProgressIndicator());
-          } else if (futureInitial.status == FutureStatus.rejected) {
-            return const Center(
-              child: Text("Erro ao carregar tarefas."),
-            );
-          } else {
+          }
+          //  else if (futureInitial.status == FutureStatus.rejected) {
+          //   return const Center(
+          //     child: Text("Erro ao carregar tarefas."),
+          //   );
+          
             return BodySprintWidget(
+              currentLocalItem:taskController.text ,
               controller: widget.controller,
               screenWidth: screenWidth,
               carouselController: _carouselController,
             );
-          }
+         
         },
       ),
     );

@@ -6,6 +6,7 @@ import 'package:image_convert/app/modules/authentication/presentation/state/auth
 
 import 'package:image_convert/app/modules/authentication/presentation/view/components/background_login.dart';
 import 'package:image_convert/app/modules/authentication/presentation/view/components/rounded_input_field.dart';
+import 'package:image_convert/app/modules/splash/presentation/view/state/controller/register_user_controller.dart';
 import 'package:image_convert/app/shared/widgets/rounded_button.dart';
 import 'package:image_convert/app/shared/widgets/style/app_colors.dart';
 import 'package:mobx/mobx.dart';
@@ -14,10 +15,11 @@ class BodyLogin extends StatefulWidget {
   const BodyLogin({
     Key? key,
     required this.size,
-    required this.controller,
+    required this.controller, required this.registerUserController,
   }) : super(key: key);
 
   final AuthController controller;
+  final RegisterUserController registerUserController;
   final Size size;
 
   @override
@@ -105,11 +107,14 @@ class _BodyLoginState extends State<BodyLogin> {
                 return RoundedButton(
                     isLoading: future?.status == FutureStatus.pending,
                     press: () {
+                      widget.registerUserController.save();
                       if (_formKeyEmail.currentState?.validate() ?? false) {
+                         
                         widget.controller.signFuture(
                             email: _emailController.text,
                             password: _passwordController.text);
                         widget.controller.listenStateSignIn(onSuccess: () {
+                         
                           Modular.to.pushNamedAndRemoveUntil(
                             '/home/',
                             (p0) => false,

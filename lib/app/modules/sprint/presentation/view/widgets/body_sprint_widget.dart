@@ -9,8 +9,9 @@ class BodySprintWidget extends StatefulWidget {
   final ItensSprintController controller;
   final double screenWidth;
   final CarouselSliderController? carouselController;
+  final String? currentLocalItem;
   const BodySprintWidget({
-    Key? key,
+    Key? key,required this.currentLocalItem,
     required this.controller,
     required this.screenWidth,
     this.carouselController,
@@ -22,6 +23,13 @@ class BodySprintWidget extends StatefulWidget {
 
 class _BodySprintWidgetState extends State<BodySprintWidget> {
   bool startDrag = false;
+  @override
+  void initState() {
+  if( widget.currentLocalItem != null){
+    widget.controller.resultInitial?.add(widget.currentLocalItem!);
+  }
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
