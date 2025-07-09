@@ -4,6 +4,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:image_convert/app/modules/splash/presentation/view/state/controller/register_user_controller.dart';
 
 import 'package:image_convert/app/modules/sprint/presentation/view/state/controllers/itens_sprint_controller.dart';
 import 'package:image_convert/app/modules/sprint/presentation/view/widgets/body_sprint_widget.dart';
@@ -12,10 +14,12 @@ import 'package:image_convert/app/shared/widgets/style/app_colors.dart';
 import 'package:mobx/mobx.dart';
 
 class SprintPage extends StatefulWidget {
+  final RegisterUserController registerUserController;
   final ItensSprintController controller;
+ 
   const SprintPage({
     Key? key,
-    required this.controller,
+    required this.controller, required this.registerUserController,
   }) : super(key: key);
 
   @override
@@ -32,42 +36,60 @@ class _SprintPageState extends State<SprintPage> {
   final DatabaseReference databaseRef =
       FirebaseDatabase.instance.ref().child('tasks');
 
-  @override
+  late ReactionDisposer disposer;
   @override
   void initState() {
     super.initState();
-
+  
     SchedulerBinding.instance.addPostFrameCallback((_) {
       widget.controller.loadTask();
     });
+      disposer = reaction<bool?>(
+    (_) => widget.registerUserController.registered,
+    (isRegistered) {
+      if (isRegistered == false) {
+        Modular.to.pushNamedAndRemoveUntil('/onBoarding/', (_) => false);
+      }
+    },
+  );
   }
+  @override
+void dispose() {
+  disposer();
+  super.dispose();
+}
 
   @override
   Widget build(BuildContext context) {
     final taskController = TextEditingController();
     double screenWidth = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(
-          Icons.add,
-          size: 50,
-          color: Colors.blue,
-          shadows: [
-            Shadow(
-              offset: Offset(2, 2),
-              blurRadius: 4,
-              color: Colors.white,
-            ),
-          ],
-        ),
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: Expanded(
-                  child: SizedBox(
+    return 
+    
+    
+    
+    PopScope(
+  canPop: false,
+      child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          child: const Icon(
+            Icons.add,
+            size: 50,
+            color: Colors.blue,
+            shadows: [
+              Shadow(
+                offset: Offset(2, 2),
+                blurRadius: 4,
+                color: Colors.white,
+              ),
+            ],
+          ),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: SizedBox(
                     height: 200,
                     width: 200,
                     child: Column(
@@ -82,117 +104,177 @@ class _SprintPageState extends State<SprintPage> {
                         const SizedBox(
                           height: 50,
                         ),
-                        ElevatedButton(
-                          onPressed: () {
-                            widget.controller
-                                .toDoItem(taskController.text, null);
-
-                            Navigator.pop(context);
-                          },
-                          child: const Text('Salvar'),
+                        Row(
+                          children: [
+                               ElevatedButton(
+                              onPressed: () {                                  
+                                Navigator.pop(context);
+                                setState(() { });
+                              },
+                              child: const Text('Cancelar'),
+                            ),
+                            const SizedBox(
+                              width: 15,
+                            ),  
+                            ElevatedButton(
+                              onPressed: () {
+                                widget.controller
+                                    .toDoItem(taskController.text, null);
+                                  
+                                Navigator.pop(context);
+                                setState(() {
+                                  
+                                });
+                              },
+                              child: const Text('Salvar'),
+                            ),             
+                          ],
                         )
                       ],
                     ),
                   ),
-                ),
-              );
-            },
-          );
-        },
-      ),
-      backgroundColor: Colors.grey[300],
-      appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.white),
-        backgroundColor: AppColors.kPrimaryColor,
-        title: const Center(
-          child: Text(
-            'Sprint',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                );
+              },
+            );
+          },
+        ),
+        backgroundColor: Colors.grey[300],
+        appBar: AppBar(
+          automaticallyImplyLeading:false ,
+          actions: [
+            IconButton(onPressed: (){
+                    showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: SizedBox(
+                    height: 100,
+                    width: 100,
+                    child: Column(
+                      children: [
+                        const Text(
+                          'Sair do app?',
+                          style: TextStyle(fontSize: 22, color: AppColors.kPrimaryColor),
+                        ),
+                        const SizedBox(
+                          height: 22,
+                        ),
+                                  
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    ElevatedButton(onPressed: (){
+                                widget.registerUserController.deleteUser();
+                                    }, 
+                                    child: const Text('Sim')),
+                                    const SizedBox(
+                  width: 10,
+                                    ),
+                                    ElevatedButton(onPressed: (){
+                  Navigator.pop(context);
+                                    }, child: const Text('Não'))
+                        
+                                  ],
+                                )
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+            }, icon: const Icon(Icons.logout))
+          ],
+          iconTheme: const IconThemeData(color: Colors.white),
+          backgroundColor: AppColors.kPrimaryColor,
+          title: const Center(
+            child: Text(
+              'Sprint',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
           ),
         ),
-      ),
-      drawer: const Drawer(),
-      body: Observer(
-        builder: (context) {
-          final futureProgress = widget.controller.loadprogessFuture;
-          final futureInitial = widget.controller.loadTaskFuture;
-          final futureConcludes = widget.controller.loadconcludesFuture;
-
-          if (futureProgress == null ||
-              futureProgress.status == FutureStatus.pending ||
-              futureInitial == null ||
-              futureInitial.status == FutureStatus.pending ||
-              futureConcludes == null ||
-              futureConcludes.status == FutureStatus.pending) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (futureInitial.status == FutureStatus.rejected) {
-            return const Center(
-              child: Text("Erro ao carregar tarefas."),
-            );
-          } else {
-            return BodySprintWidget(
-              controller: widget.controller,
-              screenWidth: screenWidth,
-              carouselController: _carouselController,
-            );
-          }
-        },
+        body: Observer(
+          builder: (context) {
+            final futureProgress = widget.controller.loadprogessFuture;
+            final futureInitial = widget.controller.loadTaskFuture;
+            final futureConcludes = widget.controller.loadconcludesFuture;
+      
+            if (futureProgress == null ||
+                futureProgress.status == FutureStatus.pending ||
+                futureInitial == null ||
+                futureInitial.status == FutureStatus.pending ||
+                futureConcludes == null ||
+                futureConcludes.status == FutureStatus.pending) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            //  else if (futureInitial.status == FutureStatus.rejected) {
+            //   return const Center(
+            //     child: Text("Erro ao carregar tarefas."),
+            //   );
+            
+              return BodySprintWidget(
+                currentLocalItem:taskController.text ,
+                controller: widget.controller,
+                screenWidth: screenWidth,
+                carouselController: _carouselController,
+              );
+           
+          },
+        ),
       ),
     );
   }
 }
 
 Widget cardWidget(bool elevation, String? task, VoidCallback onTapDelete) {
-  return Positioned(
-    child: SizedBox(
-      width: 150,
-      child: Container(
-        decoration:
-            BoxDecoration(color: AppColors.kPrimaryLiggtColor, boxShadow: [
-          if (elevation)
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 5,
-              blurRadius: 7,
-              offset: const Offset(0, 3),
-            ),
-        ]),
-        child: task != null
-            ? Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              task,
-                              style: const TextStyle(
-                                  fontSize: 12, fontWeight: FontWeight.w600),
-                            ),
+  return SizedBox(
+    width: 150,
+    child: Container(
+      decoration:
+          BoxDecoration(color: AppColors.kPrimaryLiggtColor, boxShadow: [
+        if (elevation)
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: const Offset(0, 3),
+          ),
+      ]),
+      child: task != null
+          ? Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            task,
+                            style: const TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.w600),
                           ),
-                          IconButton(
-                            onPressed: onTapDelete,
-                            icon: const Icon(
-                              Icons.delete,
-                              color: Colors.red,
-                            ),
-                          )
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      )
-                    ],
-                  ),
+                        ),
+                        IconButton(
+                          onPressed: onTapDelete,
+                          icon: const Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                          ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    )
+                  ],
                 ),
-              )
-            : const SizedBox(
-                height: 50,
               ),
-      ),
+            )
+          : const SizedBox(
+              height: 50,
+            ),
     ),
   );
 }

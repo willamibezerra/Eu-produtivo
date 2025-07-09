@@ -132,30 +132,33 @@ class _BodyRegisterAccountState extends State<BodyRegisterAccount> {
                       style: TextStyle(color: AppColors.kPrimaryColor),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
                       child: const Text('Fazer login'),
                     ),
                   ],
                 ),
-                OrDivider(size: widget.size),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SocalIcon(
-                      isSvg: true,
-                      imagePath: 'assets/icons/facebook.svg',
-                      onTap: () {},
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    SocalIcon(
-                      isSvg: false,
-                      imagePath: 'assets/icons/google_icon.png',
-                      onTap: () {},
-                    ),
-                  ],
-                ),
+                //TODO implements in future
+                // OrDivider(size: widget.size),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     SocalIcon(
+                //       isSvg: true,
+                //       imagePath: 'assets/icons/facebook.svg',
+                //       onTap: () {},
+                //     ),
+                //     const SizedBox(
+                //       width: 10,
+                //     ),
+                //     SocalIcon(
+                //       isSvg: false,
+                //       imagePath: 'assets/icons/google_icon.png',
+                //       onTap: () {},
+                //     ),
+                //   ],
+                // ),
               ],
             ),
           ),
