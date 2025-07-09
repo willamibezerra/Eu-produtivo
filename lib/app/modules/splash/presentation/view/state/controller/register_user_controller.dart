@@ -32,6 +32,7 @@ Future<void> verifyUser()async{
 Future<void> deleteUser()async{
   try {
     await repository.deleteUser();
+    registered = false;
   } catch (e) {
     errorOnLoad = true;
   }

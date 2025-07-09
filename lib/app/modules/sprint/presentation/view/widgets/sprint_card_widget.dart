@@ -25,7 +25,6 @@ class _SprintCardWidgetState extends State<SprintCardWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width,
       margin: const EdgeInsets.symmetric(horizontal: 5.0),
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 255, 255, 255),
@@ -47,40 +46,46 @@ class _SprintCardWidgetState extends State<SprintCardWidget> {
               style:
                   const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
             ),
-            if (widget.content != null)
-              Expanded(
-                child: ListView.builder(
-                  itemCount: widget.content!.length,
-                  itemBuilder: (context, index) {
-                    return Draggable(
-                      onDragStarted: () {
-                        setState(() {
-                          startDrag = true;
-                        });
-                      },
-                      onDragEnd: (details) {
-                        if (widget.onDragEnd != null) {
-                          widget.onDragEnd!(details, index);
-                        }
-                      },
-                      data: 'Flutter',
-                      feedback: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: cardWidget(
-                          true,
-                          null,
-                          () {},
+              Visibility(
+                visible: widget.content != null,
+                child: SizedBox(
+                  height: 500,
+                  child: ListView.builder(
+                    itemCount: widget.content?.length,
+                    itemBuilder: (context, index) {
+                      //erro está aqui.
+                      return Draggable(
+                        onDragStarted: () {
+                          setState(() {
+                            startDrag = true;
+                          });
+                        },
+                        onDragEnd: (details) {
+                          if (widget.onDragEnd != null) {
+                            widget.onDragEnd!(details, index);
+                          }
+                        },
+                        data: 'Flutter',
+                        feedback: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: cardWidget(
+                            true,
+                            null,
+                            () {},
+                          ),
                         ),
-                      ),
-                      childWhenDragging: Container(),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: cardWidget(false, widget.content![index], () {
-                          widget.onTapDelete!(index);
-                        }),
-                      ),
-                    );
-                  },
+                        childWhenDragging: Container(),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child:
+                          
+                           cardWidget(false, widget.content![index], () {
+                            widget.onTapDelete!(index);
+                          }),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
           ],

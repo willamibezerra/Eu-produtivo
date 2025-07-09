@@ -107,9 +107,8 @@ class _BodyLoginState extends State<BodyLogin> {
                 return RoundedButton(
                     isLoading: future?.status == FutureStatus.pending,
                     press: () {
-                      widget.registerUserController.save();
                       if (_formKeyEmail.currentState?.validate() ?? false) {
-                         
+                         widget.registerUserController.save();
                         widget.controller.signFuture(
                             email: _emailController.text,
                             password: _passwordController.text);

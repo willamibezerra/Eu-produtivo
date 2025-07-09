@@ -32,110 +32,95 @@ class _BodySprintWidgetState extends State<BodySprintWidget> {
   }
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 40,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: CarouselSlider(
+        carouselController: widget.carouselController,
+        options: CarouselOptions(
+          autoPlayAnimationDuration:
+              const Duration(microseconds: 100),
+          height: MediaQuery.of(context).size.height * 0.8,
+          enableInfiniteScroll: false,
+        ),
+        items: [
+          Builder(
+            builder: (BuildContext context) {
+              return SprintCardWidget(
+                  onTapDelete: (index) {
+                    widget.controller.deleteItenToDO(index);
+                    setState(() {});
+                  },
+                  onDragEnd: (details, index) {
+                    if (details.offset.dx >
+                        widget.screenWidth * 0.6) {
+                      widget.controller.loadInProgress(
+                          widget.controller.resultInitial![index],
+                          index,
+                          true);
+            
+                      widget.carouselController!.nextPage();
+                    }
+                    setState(() {
+                      startDrag = false;
+                    });
+                  },
+                  title: 'Para fazer',
+                  content: widget.controller.resultInitial);
+            },
           ),
-          Row(
-            children: [
-              const SizedBox(
-                width: 20,
-              ),
-              Expanded(
-                child: CarouselSlider(
-                  carouselController: widget.carouselController,
-                  options: CarouselOptions(
-                    autoPlayAnimationDuration:
-                        const Duration(microseconds: 100),
-                    height: MediaQuery.of(context).size.height * 0.8,
-                    enableInfiniteScroll: false,
-                  ),
-                  items: [
-                    Builder(
-                      builder: (BuildContext context) {
-                        return SprintCardWidget(
-                            onTapDelete: (index) {
-                              widget.controller.deleteItenToDO(index);
-                              setState(() {});
-                            },
-                            onDragEnd: (details, index) {
-                              if (details.offset.dx >
-                                  widget.screenWidth * 0.6) {
-                                widget.controller.loadInProgress(
-                                    widget.controller.resultInitial![index],
-                                    index,
-                                    true);
-
-                                widget.carouselController!.nextPage();
-                              }
-                              setState(() {
-                                startDrag = false;
-                              });
-                            },
-                            title: 'Para fazer',
-                            content: widget.controller.resultInitial);
-                      },
-                    ),
-                    Builder(
-                      builder: (BuildContext context) {
-                        return SprintCardWidget(
-                          onTapDelete: (index) {
-                            widget.controller.deleteItenInProgress(index);
-                            setState(() {});
-                          },
-                          onDragEnd: (details, index) {
-                            if (details.offset.dx > widget.screenWidth * 0.6) {
-                              widget.controller.changeToConclued(
-                                  widget.controller.resultInProgress![index],
-                                  index);
-
-                              widget.carouselController!.nextPage();
-                            } else if (details.offset.dx <
-                                widget.screenWidth * 0.16) {
-                              widget.controller.toDoItem(
-                                  widget.controller.resultInProgress![index],
-                                  index);
-                              widget.carouselController!.previousPage();
-                            }
-                            setState(() {
-                              startDrag = false;
-                            });
-                          },
-                          title: 'Em progresso',
-                          content: widget.controller.resultInProgress,
-                        );
-                      },
-                    ),
-                    Builder(
-                      builder: (BuildContext context) {
-                        return SprintCardWidget(
-                          onTapDelete: (index) {
-                            setState(() {
-                              widget.controller.deleteconcludes(index);
-                            });
-                          },
-                          onDragEnd: (details, index) {
-                            if (details.offset.dx < widget.screenWidth * 0.16) {
-                              widget.controller.loadInProgress(
-                                  widget.controller.conclued![index],
-                                  index,
-                                  false);
-                              widget.controller.deleteconcludes(index);
-                              widget.carouselController!.previousPage();
-                              setState(() {});
-                            }
-                          },
-                          title: 'Feito',
-                          content: widget.controller.conclued,
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          Builder(
+            builder: (BuildContext context) {
+              return SprintCardWidget(
+                onTapDelete: (index) {
+                  widget.controller.deleteItenInProgress(index);
+                  setState(() {});
+                },
+                onDragEnd: (details, index) {
+                  if (details.offset.dx > widget.screenWidth * 0.6) {
+                    widget.controller.changeToConclued(
+                        widget.controller.resultInProgress![index],
+                        index);
+            
+                    widget.carouselController!.nextPage();
+                  } else if (details.offset.dx <
+                      widget.screenWidth * 0.16) {
+                    widget.controller.toDoItem(
+                        widget.controller.resultInProgress![index],
+                        index);
+                    widget.carouselController!.previousPage();
+                  }
+                  setState(() {
+                    startDrag = false;
+                  });
+                },
+                title: 'Em progresso',
+                content: widget.controller.resultInProgress,
+              );
+            },
+          ),
+          Builder(
+            builder: (BuildContext context) {
+              return SprintCardWidget(
+                onTapDelete: (index) {
+                  setState(() {
+                    widget.controller.deleteconcludes(index);
+                  });
+                },
+                onDragEnd: (details, index) {
+                  if (details.offset.dx < widget.screenWidth * 0.16) {
+                    widget.controller.loadInProgress(
+                        widget.controller.conclued![index],
+                        index,
+                        false);
+                    widget.controller.deleteconcludes(index);
+                    widget.carouselController!.previousPage();
+                    setState(() {});
+                  }
+                },
+                title: 'Feito',
+                content: widget.controller.conclued,
+              );
+            },
           ),
         ],
       ),

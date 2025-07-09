@@ -51,6 +51,7 @@ DatabaseReference get refConcludes =>
 
   @action
   Future<void> toDoItem(String item, int? index) async {
+    if(item.isEmpty)return;
     if (resultInitial != null) {
       resultInitial!.add(item);
     } else {
@@ -74,7 +75,7 @@ DatabaseReference get refConcludes =>
     if (isRight && resultInitial != null) {
       deleteItenToDO(index);
     }
-    await refInProgress.update({"users/$uid/itens": resultInProgress});
+    await refInProgress.update({"itens": resultInProgress});
   }
 
   @action
@@ -89,7 +90,7 @@ DatabaseReference get refConcludes =>
     if (resultInProgress != null) {
       deleteItenInProgress(index);
     }
-    await refConcludes.update({"users/$uid/itens": conclued});
+    await refConcludes.update({"itens": conclued});
   }
 
   @action
@@ -104,7 +105,7 @@ DatabaseReference get refConcludes =>
   Future<void> deleteItenInProgress(int index) async {
     if (resultInProgress != null && resultInProgress!.isNotEmpty) {
       resultInProgress!.removeAt(index);
-      await refInProgress.update({"users/$uid/itens": resultInProgress});
+      await refInProgress.update({"itens": resultInProgress});
     }
   }
 
@@ -112,7 +113,7 @@ DatabaseReference get refConcludes =>
   Future<void> deleteconcludes(int index) async {
     if (conclued != null && conclued!.isNotEmpty) {
       conclued!.removeAt(index);
-      await refConcludes.update({"users/$uid/itens": conclued});
+      await refConcludes.update({"itens": conclued});
     }
   }
 
