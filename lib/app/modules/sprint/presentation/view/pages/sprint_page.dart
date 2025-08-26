@@ -16,10 +16,11 @@ import 'package:mobx/mobx.dart';
 class SprintPage extends StatefulWidget {
   final RegisterUserController registerUserController;
   final ItensSprintController controller;
- 
+
   const SprintPage({
     Key? key,
-    required this.controller, required this.registerUserController,
+    required this.controller,
+    required this.registerUserController,
   }) : super(key: key);
 
   @override
@@ -30,46 +31,41 @@ class _SprintPageState extends State<SprintPage> {
   List<String>? tasks;
   String result = "";
 
-  final CarouselSliderController _carouselController =
-      CarouselSliderController();
+  final CarouselSliderController _carouselController = CarouselSliderController();
 
-  final DatabaseReference databaseRef =
-      FirebaseDatabase.instance.ref().child('tasks');
+  final DatabaseReference databaseRef = FirebaseDatabase.instance.ref().child('tasks');
 
   late ReactionDisposer disposer;
   @override
   void initState() {
     super.initState();
-  
+
     SchedulerBinding.instance.addPostFrameCallback((_) {
       widget.controller.loadTask();
     });
-      disposer = reaction<bool?>(
-    (_) => widget.registerUserController.registered,
-    (isRegistered) {
-      if (isRegistered == false) {
-        Modular.to.pushNamedAndRemoveUntil('/onBoarding/', (_) => false);
-      }
-    },
-  );
+    disposer = reaction<bool?>(
+      (_) => widget.registerUserController.registered,
+      (isRegistered) {
+        if (isRegistered == false) {
+          Modular.to.pushNamedAndRemoveUntil('/onBoarding/', (_) => false);
+        }
+      },
+    );
   }
+
   @override
-void dispose() {
-  disposer();
-  super.dispose();
-}
+  void dispose() {
+    disposer();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final taskController = TextEditingController();
     double screenWidth = MediaQuery.of(context).size.width;
 
-    return 
-    
-    
-    
-    PopScope(
-  canPop: false,
+    return PopScope(
+      canPop: false,
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
           child: const Icon(
@@ -106,28 +102,25 @@ void dispose() {
                         ),
                         Row(
                           children: [
-                               ElevatedButton(
-                              onPressed: () {                                  
+                            ElevatedButton(
+                              onPressed: () {
                                 Navigator.pop(context);
-                                setState(() { });
+                                setState(() {});
                               },
                               child: const Text('Cancelar'),
                             ),
                             const SizedBox(
                               width: 15,
-                            ),  
+                            ),
                             ElevatedButton(
                               onPressed: () {
-                                widget.controller
-                                    .toDoItem(taskController.text, null);
-                                  
+                                widget.controller.toDoItem(taskController.text, null);
+
                                 Navigator.pop(context);
-                                setState(() {
-                                  
-                                });
+                                setState(() {});
                               },
                               child: const Text('Salvar'),
-                            ),             
+                            ),
                           ],
                         )
                       ],
@@ -140,49 +133,52 @@ void dispose() {
         ),
         backgroundColor: Colors.grey[300],
         appBar: AppBar(
-          automaticallyImplyLeading:false ,
+          automaticallyImplyLeading: false,
           actions: [
-            IconButton(onPressed: (){
-                    showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: SizedBox(
-                    height: 100,
-                    width: 100,
-                    child: Column(
-                      children: [
-                        const Text(
-                          'Sair do app?',
-                          style: TextStyle(fontSize: 22, color: AppColors.kPrimaryColor),
+            IconButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: SizedBox(
+                          height: 100,
+                          width: 100,
+                          child: Column(
+                            children: [
+                              const Text(
+                                'Sair do app?',
+                                style: TextStyle(fontSize: 22, color: AppColors.kPrimaryColor),
+                              ),
+                              const SizedBox(
+                                height: 22,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        widget.registerUserController.deleteUser();
+                                      },
+                                      child: const Text('Sim')),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('Não'))
+                                ],
+                              )
+                            ],
+                          ),
                         ),
-                        const SizedBox(
-                          height: 22,
-                        ),
-                                  
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    ElevatedButton(onPressed: (){
-                                widget.registerUserController.deleteUser();
-                                    }, 
-                                    child: const Text('Sim')),
-                                    const SizedBox(
-                  width: 10,
-                                    ),
-                                    ElevatedButton(onPressed: (){
-                  Navigator.pop(context);
-                                    }, child: const Text('Não'))
-                        
-                                  ],
-                                )
-                      ],
-                    ),
-                  ),
-                );
-              },
-            );
-            }, icon: const Icon(Icons.logout))
+                      );
+                    },
+                  );
+                },
+                icon: const Icon(Icons.logout))
           ],
           iconTheme: const IconThemeData(color: Colors.white),
           backgroundColor: AppColors.kPrimaryColor,
@@ -198,7 +194,7 @@ void dispose() {
             final futureProgress = widget.controller.loadprogessFuture;
             final futureInitial = widget.controller.loadTaskFuture;
             final futureConcludes = widget.controller.loadconcludesFuture;
-      
+
             if (futureProgress == null ||
                 futureProgress.status == FutureStatus.pending ||
                 futureInitial == null ||
@@ -207,18 +203,13 @@ void dispose() {
                 futureConcludes.status == FutureStatus.pending) {
               return const Center(child: CircularProgressIndicator());
             }
-            //  else if (futureInitial.status == FutureStatus.rejected) {
-            //   return const Center(
-            //     child: Text("Erro ao carregar tarefas."),
-            //   );
-            
-              return BodySprintWidget(
-                currentLocalItem:taskController.text ,
-                controller: widget.controller,
-                screenWidth: screenWidth,
-                carouselController: _carouselController,
-              );
-           
+
+            return BodySprintWidget(
+              currentLocalItem: taskController.text,
+              controller: widget.controller,
+              screenWidth: screenWidth,
+              carouselController: _carouselController,
+            );
           },
         ),
       ),
@@ -230,8 +221,7 @@ Widget cardWidget(bool elevation, String? task, VoidCallback onTapDelete) {
   return SizedBox(
     width: 150,
     child: Container(
-      decoration:
-          BoxDecoration(color: AppColors.kPrimaryLiggtColor, boxShadow: [
+      decoration: BoxDecoration(color: AppColors.kPrimaryLiggtColor, boxShadow: [
         if (elevation)
           BoxShadow(
             color: Colors.grey.withOpacity(0.5),
@@ -252,8 +242,7 @@ Widget cardWidget(bool elevation, String? task, VoidCallback onTapDelete) {
                         Expanded(
                           child: Text(
                             task,
-                            style: const TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.w600),
+                            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
                           ),
                         ),
                         IconButton(

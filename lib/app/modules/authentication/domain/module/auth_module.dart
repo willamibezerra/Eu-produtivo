@@ -10,8 +10,8 @@ import 'package:image_convert/app/modules/authentication/presentation/view/pages
 import 'package:image_convert/app/modules/splash/presentation/view/state/controller/register_user_controller.dart';
 
 class AuthModule extends Module {
-    @override
-    void binds(Injector i) {
+  @override
+  void binds(Injector i) {
     i.addSingleton(Auth.new);
     i.add<IauthDataSource>(AuthDataSource.new);
     i.add<IauthRepository>(AuthRepository.new);
@@ -23,7 +23,10 @@ class AuthModule extends Module {
   void routes(RouteManager r) {
     r.child(
       '/',
-      child: (context) => LoginPage(controller: Modular.get(), registerUserController:  Modular.get(),),
+      child: (context) => AuthPage(
+        controller: Modular.get(),
+        registerUserController: Modular.get(),
+      ),
     );
     r.child(
       '/register',

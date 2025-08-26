@@ -15,7 +15,8 @@ class BodyLogin extends StatefulWidget {
   const BodyLogin({
     Key? key,
     required this.size,
-    required this.controller, required this.registerUserController,
+    required this.controller,
+    required this.registerUserController,
   }) : super(key: key);
 
   final AuthController controller;
@@ -97,8 +98,7 @@ class _BodyLoginState extends State<BodyLogin> {
               size: widget.size,
               hintText: 'Senha',
               onChanged: (p0) {},
-              suffixIcon:
-                  isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+              suffixIcon: isPasswordVisible ? Icons.visibility_off : Icons.visibility,
             ),
             Observer(
               builder: (context) {
@@ -108,12 +108,9 @@ class _BodyLoginState extends State<BodyLogin> {
                     isLoading: future?.status == FutureStatus.pending,
                     press: () {
                       if (_formKeyEmail.currentState?.validate() ?? false) {
-                         widget.registerUserController.save();
-                        widget.controller.signFuture(
-                            email: _emailController.text,
-                            password: _passwordController.text);
+                        widget.registerUserController.save();
+                        widget.controller.signFuture(email: _emailController.text, password: _passwordController.text);
                         widget.controller.listenStateSignIn(onSuccess: () {
-                         
                           Modular.to.pushNamedAndRemoveUntil(
                             '/home/',
                             (p0) => false,
@@ -145,9 +142,7 @@ class _BodyLoginState extends State<BodyLogin> {
                   },
                   child: const Text(
                     'Criar Conta',
-                    style: TextStyle(
-                        color: AppColors.kPrimaryColor,
-                        fontWeight: FontWeight.bold),
+                    style: TextStyle(color: AppColors.kPrimaryColor, fontWeight: FontWeight.bold),
                   ),
                 ),
               ],
@@ -159,7 +154,6 @@ class _BodyLoginState extends State<BodyLogin> {
   }
 
   bool isEmailValid(String email) {
-    // Padrão simples de validação de e-mail
     final RegExp emailRegExp = RegExp(
       r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
     );

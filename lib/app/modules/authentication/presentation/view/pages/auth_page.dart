@@ -4,20 +4,21 @@ import 'package:image_convert/app/modules/authentication/presentation/state/auth
 import 'package:image_convert/app/modules/authentication/presentation/view/components/body_login.dart';
 import 'package:image_convert/app/modules/splash/presentation/view/state/controller/register_user_controller.dart';
 
-class LoginPage extends StatefulWidget {
+class AuthPage extends StatefulWidget {
   final AuthController controller;
   final RegisterUserController registerUserController;
 
-  const LoginPage({
+  const AuthPage({
     Key? key,
-    required this.controller, required this.registerUserController,
+    required this.controller,
+    required this.registerUserController,
   }) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<AuthPage> createState() => _AuthPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _AuthPageState extends State<AuthPage> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -26,11 +27,9 @@ class _LoginPageState extends State<LoginPage> {
       resizeToAvoidBottomInset: false,
       body: BodyLogin(
         controller: widget.controller,
-        size: size, registerUserController: widget.registerUserController,
+        size: size,
+        registerUserController: widget.registerUserController,
       ),
     );
   }
 }
-
-
-   //Modular.to.pushNamed('/auth /register');
