@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_onboarding_slider/flutter_onboarding_slider.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:image_convert/app/modules/on_boarding/presentation/view/widgets/on_boarding_widget.dart';
+import 'package:image_convert/app/modules/on_boarding/presentation/view/pages/on_boarding_page.dart';
 
 void main() {
   testWidgets('OnBoardingWidget renders and navigates correctly', (WidgetTester tester) async {
     await tester.pumpWidget(
       const MaterialApp(
-        home: OnBoardingWidget(),
+        home: OnBoardingPage(),
       ),
     );
     expect(find.text('Bem-Vindo'), findsOneWidget);

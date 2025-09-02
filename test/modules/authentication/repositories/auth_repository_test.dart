@@ -6,7 +6,7 @@ import 'package:mockito/mockito.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
-class MockAuthDataSource extends Mock implements IauthDataSource {}
+import '../mocks/datasource/mocked_auth_datasource.mocks.mocks.dart';
 
 void main() {
   late AuthRepository authRepository;
@@ -58,7 +58,6 @@ void main() {
       const email = 'test@example.com';
       const password = 'password123';
 
-      // Configure the mock to return a Future<void>
       when(mockAuthDataSource.createUserWithEmailAndPassword(email: email, password: password)).thenAnswer((_) async => Future.value());
 
       final result = await authRepository.createUserWithEmailAndPasswordRepository(email: email, password: password);
@@ -70,7 +69,6 @@ void main() {
       const email = 'test@example.com';
       const password = 'password123';
 
-      // Configure the mock to throw a FirebaseAuthException
       when(mockAuthDataSource.createUserWithEmailAndPassword(email: email, password: password))
           .thenThrow(FirebaseAuthException(message: 'Erro de criação de usuário', code: 'auth-error'));
 
@@ -83,7 +81,6 @@ void main() {
       const email = 'test@example.com';
       const password = 'password123';
 
-      // Configure the mock to throw a generic exception
       when(mockAuthDataSource.createUserWithEmailAndPassword(email: email, password: password)).thenThrow(Exception());
 
       final result = await authRepository.createUserWithEmailAndPasswordRepository(email: email, password: password);

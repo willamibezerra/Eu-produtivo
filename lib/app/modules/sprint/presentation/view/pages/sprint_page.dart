@@ -33,8 +33,8 @@ class _SprintPageState extends State<SprintPage> {
 
   final CarouselSliderController _carouselController = CarouselSliderController();
 
-  final DatabaseReference databaseRef = FirebaseDatabase.instance.ref().child('tasks');
-
+//  final DatabaseReference databaseRef = FirebaseDatabase.instance.ref().child('tasks');
+//TODO verificar se a linha acima era usada
   late ReactionDisposer disposer;
   @override
   void initState() {

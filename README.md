@@ -5,3 +5,8 @@ O "Eu produtivo" é um aplicativo feito com o intuito de aumentar a produtividad
 flutter pub get
 ## gerador de codigo
 flutter packages pub run build_runner build
+# To create mocks
+
+```zsh
+dart run build_runner build --delete-conflicting-outputs
+``

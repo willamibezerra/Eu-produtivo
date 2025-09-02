@@ -5,8 +5,8 @@ import 'package:image_convert/app/modules/authentication/data/firebase_authentic
 import 'package:image_convert/app/modules/authentication/domain/repositories/auth_repository.dart';
 import 'package:image_convert/app/modules/authentication/domain/repositories/interfaces/auth_repository_interface.dart';
 import 'package:image_convert/app/modules/authentication/presentation/state/auth_controller.dart';
+import 'package:image_convert/app/modules/authentication/presentation/view/components/register_account_page.dart';
 import 'package:image_convert/app/modules/authentication/presentation/view/pages/auth_page.dart';
-import 'package:image_convert/app/modules/authentication/presentation/view/pages/register_account_page.dart';
 import 'package:image_convert/app/modules/splash/presentation/view/state/controller/register_user_controller.dart';
 
 class AuthModule extends Module {

@@ -3,7 +3,7 @@ import 'package:image_convert/app/modules/authentication/data/data_sources/auth_
 import 'package:image_convert/app/modules/authentication/data/firebase_authentication/auth.dart';
 import 'package:mockito/mockito.dart';
 
-class MockAuth extends Mock implements Auth {}
+import '../mocks/mocked_auth.mocks.mocks.dart';
 
 void main() {
   late AuthDataSource authDataSource;

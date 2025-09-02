@@ -22,30 +22,24 @@ abstract class AuthControllerBase with Store {
     this.repository,
   );
   @action
-  Future<void> signFuture(
-      {required String email, required String password}) async {
+  Future<void> signFuture({required String email, required String password}) async {
     try {
-      loadSignFuture = ObservableFuture(
-          signInWithEmailAndPassword(email: email, password: password));
+      loadSignFuture = ObservableFuture(signInWithEmailAndPassword(email: email, password: password));
     } catch (e) {
       print("Erro ao carregar tarefas: $e");
     }
   }
 
   @action
-  Future<void> signInWithEmailAndPassword(
-      {required String email, required String password}) async {
-    final result = await repository.signInWithEmailAndpasswordRepository(
-        email: email, password: password);
+  Future<void> signInWithEmailAndPassword({required String email, required String password}) async {
+    final result = await repository.signInWithEmailAndpasswordRepository(email: email, password: password);
 
     result.fold((l) => signInSucess = false, (r) => signInSucess = true);
   }
 
-  Future<void> createAccount(
-      {required String email, required String password}) async {
+  Future<void> createAccount({required String email, required String password}) async {
     isLoading = true;
-    final result = await repository.createUserWithEmailAndPasswordRepository(
-        email: email, password: password);
+    final result = await repository.createUserWithEmailAndPasswordRepository(email: email, password: password);
     result.fold((l) {
       createAccountSucess = false;
       failureCreateUser = l;
@@ -56,8 +50,7 @@ abstract class AuthControllerBase with Store {
     isLoading = false;
   }
 
-  void listenStateSignIn(
-      {required Function onSuccess, required Function onFailure}) {
+  void listenStateSignIn({required Function onSuccess, required Function onFailure}) {
     autorun((p0) {
       if (signInSucess != null) {
         if (signInSucess!) {

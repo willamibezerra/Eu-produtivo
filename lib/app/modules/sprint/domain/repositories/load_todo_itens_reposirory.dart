@@ -6,10 +6,8 @@ class LoadTodoItensReposirory implements IloadTodoItensRepository {
   LoadTodoItensReposirory();
 
   @override
-  Future<List<String>> loadTaskFromDatabaseRepository(
-      {required String tableTitle}) async {
-    final DatabaseReference sprintDataBase =
-        FirebaseDatabase.instance.ref().child(tableTitle);
+  Future<List<String>> loadTaskFromDatabaseRepository({required String tableTitle, FirebaseDatabase? firebaseDAtabase}) async {
+    final DatabaseReference sprintDataBase = FirebaseDatabase.instance.ref().child(tableTitle);
     final snapshot = await sprintDataBase.get();
     if (snapshot.exists) {
       Map<Object?, Object?> rawMap = snapshot.value as Map<Object?, Object?>;

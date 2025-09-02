@@ -6,7 +6,7 @@ import 'package:image_convert/app/shared/app_module.dart';
 import 'package:image_convert/app/shared/widgets/style/app_colors.dart';
 import 'package:image_convert/firebase_options.dart';
 
-Future<void> main() async { 
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -23,9 +23,7 @@ class MyApp extends StatelessWidget {
     return ModularApp(
       module: AppModule(),
       child: MaterialApp.router(
-        theme: ThemeData(
-            primaryColor: AppColors.kPrimaryColor,
-            scaffoldBackgroundColor: Colors.white), 
+        theme: ThemeData(primaryColor: AppColors.kPrimaryColor, scaffoldBackgroundColor: Colors.white),
         routerConfig: Modular.routerConfig,
       ),
     );
